@@ -1,0 +1,1487 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/filter.css">
+<link rel="stylesheet" href="css/nouislider.min.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title>Agriculture Mapping</title>
+    </head>
+    <body>
+        <div  style="background-image: linear-gradient(#ffff, #FD746C); margin: 0px 0px;">
+          <h2 style="text-align: center; margin-block-start: 0; margin-block-end: 0; padding-top: 10px; padding-bottom: 10px;">Agriculture in India</h2>
+        </div>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/tailDT.js"></script>
+        <script src="js/nouislider.min.js"></script>
+        <script src="js/wNumb.js"></script>
+        <script src="data/soilfinal_1.js"></script>
+        <script src="data/rainfall_2.js"></script>
+        <script src="data/groundwaterfinal_3.js"></script>
+        <script src="data/cropindia_4.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString') {
+              highlightLayer.setStyle({
+                color: '#ffff00',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ffff00',
+                fillOpacity: 1
+              });
+            }
+            highlightLayer.openPopup();
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[6.143764917121963,61.8817880605193],[42.85477184167639,94.10680871290283]]);
+        var hash = new L.Hash(map);
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_OSMStandard_0');
+        map.getPane('pane_OSMStandard_0').style.zIndex = 400;
+        var layer_OSMStandard_0 = L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            pane: 'pane_OSMStandard_0',
+            opacity: 1.0,
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 19
+        });
+        layer_OSMStandard_0;
+        map.addLayer(layer_OSMStandard_0);
+        function pop_soilfinal_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">sand % topsoil</th>\
+                        <td>' + (feature.properties['sand % topsoil'] !== null ? autolinker.link(feature.properties['sand % topsoil'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">silt % topsoil</th>\
+                        <td>' + (feature.properties['silt % topsoil'] !== null ? autolinker.link(feature.properties['silt % topsoil'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">clay % topsoil</th>\
+                        <td>' + (feature.properties['clay % topsoil'] !== null ? autolinker.link(feature.properties['clay % topsoil'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">pH water topsoil</th>\
+                        <td>' + (feature.properties['pH water topsoil'] !== null ? autolinker.link(feature.properties['pH water topsoil'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">OC % topsoil</th>\
+                        <td>' + (feature.properties['OC % topsoil'] !== null ? autolinker.link(feature.properties['OC % topsoil'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">N % topsoil</th>\
+                        <td>' + (feature.properties['N % topsoil'] !== null ? autolinker.link(feature.properties['N % topsoil'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">CaCO3 % topsoil</th>\
+                        <td>' + (feature.properties['CaCO3 % topsoil'] !== null ? autolinker.link(feature.properties['CaCO3 % topsoil'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">C/N topsoil</th>\
+                        <td>' + (feature.properties['C/N topsoil'] !== null ? autolinker.link(feature.properties['C/N topsoil'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_soilfinal_1_0(feature) {
+            if (feature.properties['C/N topsoil'] >= 2.000000 && feature.properties['C/N topsoil'] <= 10.000000 ) {
+                return {
+                pane: 'pane_soilfinal_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,245,235,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['C/N topsoil'] >= 10.000000 && feature.properties['C/N topsoil'] <= 11.000000 ) {
+                return {
+                pane: 'pane_soilfinal_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(254,210,166,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['C/N topsoil'] >= 11.000000 && feature.properties['C/N topsoil'] <= 12.000000 ) {
+                return {
+                pane: 'pane_soilfinal_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(253,146,67,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['C/N topsoil'] >= 12.000000 && feature.properties['C/N topsoil'] <= 14.000000 ) {
+                return {
+                pane: 'pane_soilfinal_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(223,79,5,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['C/N topsoil'] >= 14.000000 && feature.properties['C/N topsoil'] <= 57.000000 ) {
+                return {
+                pane: 'pane_soilfinal_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(127,39,4,1.0)',
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_soilfinal_1');
+        map.getPane('pane_soilfinal_1').style.zIndex = 401;
+        map.getPane('pane_soilfinal_1').style['mix-blend-mode'] = 'normal';
+        var layer_soilfinal_1 = new L.geoJson(json_soilfinal_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_soilfinal_1',
+            layerName: 'layer_soilfinal_1',
+            pane: 'pane_soilfinal_1',
+            onEachFeature: pop_soilfinal_1,
+            style: style_soilfinal_1_0,
+        });
+        bounds_group.addLayer(layer_soilfinal_1);
+        map.addLayer(layer_soilfinal_1);
+        function pop_rainfall_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">ST_NM</th>\
+                        <td>' + (feature.properties['ST_NM'] !== null ? autolinker.link(feature.properties['ST_NM'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DISTRICT</th>\
+                        <td>' + (feature.properties['DISTRICT'] !== null ? autolinker.link(feature.properties['DISTRICT'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ANNUAL</th>\
+                        <td>' + (feature.properties['ANNUAL'] !== null ? autolinker.link(feature.properties['ANNUAL'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Jan-Feb</th>\
+                        <td>' + (feature.properties['Jan-Feb'] !== null ? autolinker.link(feature.properties['Jan-Feb'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Mar-May</th>\
+                        <td>' + (feature.properties['Mar-May'] !== null ? autolinker.link(feature.properties['Mar-May'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Jun-Sep</th>\
+                        <td>' + (feature.properties['Jun-Sep'] !== null ? autolinker.link(feature.properties['Jun-Sep'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Oct-Dec</th>\
+                        <td>' + (feature.properties['Oct-Dec'] !== null ? autolinker.link(feature.properties['Oct-Dec'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_rainfall_2_0(feature) {
+            if (feature.properties['q2wHide_annual-fix'] >= 181.200000 && feature.properties['q2wHide_annual-fix'] <= 766.300000 ) {
+                return {
+                pane: 'pane_rainfall_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(247,251,255,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['q2wHide_annual-fix'] >= 766.300000 && feature.properties['q2wHide_annual-fix'] <= 979.800000 ) {
+                return {
+                pane: 'pane_rainfall_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(200,221,240,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['q2wHide_annual-fix'] >= 979.800000 && feature.properties['q2wHide_annual-fix'] <= 1168.600000 ) {
+                return {
+                pane: 'pane_rainfall_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(115,179,216,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['q2wHide_annual-fix'] >= 1168.600000 && feature.properties['q2wHide_annual-fix'] <= 1618.300000 ) {
+                return {
+                pane: 'pane_rainfall_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(40,121,185,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['q2wHide_annual-fix'] >= 1618.300000 && feature.properties['q2wHide_annual-fix'] <= 7229.300000 ) {
+                return {
+                pane: 'pane_rainfall_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(8,48,107,1.0)',
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_rainfall_2');
+        map.getPane('pane_rainfall_2').style.zIndex = 402;
+        map.getPane('pane_rainfall_2').style['mix-blend-mode'] = 'normal';
+        var layer_rainfall_2 = new L.geoJson(json_rainfall_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_rainfall_2',
+            layerName: 'layer_rainfall_2',
+            pane: 'pane_rainfall_2',
+            onEachFeature: pop_rainfall_2,
+            style: style_rainfall_2_0,
+        });
+        bounds_group.addLayer(layer_rainfall_2);
+        map.addLayer(layer_rainfall_2);
+        function pop_groundwaterfinal_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">ST_NM</th>\
+                        <td>' + (feature.properties['ST_NM'] !== null ? autolinker.link(feature.properties['ST_NM'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DISTRICT</th>\
+                        <td>' + (feature.properties['DISTRICT'] !== null ? autolinker.link(feature.properties['DISTRICT'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Total Annual Ground Water Recharge</th>\
+                        <td>' + (feature.properties['Total Annual Ground Water Recharge'] !== null ? autolinker.link(feature.properties['Total Annual Ground Water Recharge'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Annual Extractable Ground Water Resource</th>\
+                        <td>' + (feature.properties['Annual Extractable Ground Water Resource'] !== null ? autolinker.link(feature.properties['Annual Extractable Ground Water Resource'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Current Annual Ground Water Extraction For Irrigation</th>\
+                        <td>' + (feature.properties['Current Annual Ground Water Extraction For Irrigation'] !== null ? autolinker.link(feature.properties['Current Annual Ground Water Extraction For Irrigation'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_groundwaterfinal_3_0(feature) {
+            if (feature.properties['q2wHide_irri'] >= 0.000000 && feature.properties['q2wHide_irri'] <= 4878.140000 ) {
+                return {
+                pane: 'pane_groundwaterfinal_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(247,251,255,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['q2wHide_irri'] >= 4878.140000 && feature.properties['q2wHide_irri'] <= 17798.320000 ) {
+                return {
+                pane: 'pane_groundwaterfinal_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(200,221,240,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['q2wHide_irri'] >= 17798.320000 && feature.properties['q2wHide_irri'] <= 35748.008000 ) {
+                return {
+                pane: 'pane_groundwaterfinal_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(115,179,216,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['q2wHide_irri'] >= 35748.008000 && feature.properties['q2wHide_irri'] <= 56038.046000 ) {
+                return {
+                pane: 'pane_groundwaterfinal_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(40,121,185,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['q2wHide_irri'] >= 56038.046000 && feature.properties['q2wHide_irri'] <= 368502.310000 ) {
+                return {
+                pane: 'pane_groundwaterfinal_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(8,48,107,1.0)',
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_groundwaterfinal_3');
+        map.getPane('pane_groundwaterfinal_3').style.zIndex = 403;
+        map.getPane('pane_groundwaterfinal_3').style['mix-blend-mode'] = 'normal';
+        var layer_groundwaterfinal_3 = new L.geoJson(json_groundwaterfinal_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_groundwaterfinal_3',
+            layerName: 'layer_groundwaterfinal_3',
+            pane: 'pane_groundwaterfinal_3',
+            onEachFeature: pop_groundwaterfinal_3,
+            style: style_groundwaterfinal_3_0,
+        });
+        bounds_group.addLayer(layer_groundwaterfinal_3);
+        map.addLayer(layer_groundwaterfinal_3);
+        function pop_cropindia_4(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">ST_NM</th>\
+                        <td>' + (feature.properties['ST_NM'] !== null ? autolinker.link(feature.properties['ST_NM'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DISTRICT</th>\
+                        <td>' + (feature.properties['DISTRICT'] !== null ? autolinker.link(feature.properties['DISTRICT'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Crop_Year</th>\
+                        <td>' + (feature.properties['Crop_Year'] !== null ? autolinker.link(feature.properties['Crop_Year'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Season</th>\
+                        <td>' + (feature.properties['Season'] !== null ? autolinker.link(feature.properties['Season'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Crop</th>\
+                        <td>' + (feature.properties['Crop'] !== null ? autolinker.link(feature.properties['Crop'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_cropindia_4_0() {
+            return {
+                pane: 'pane_cropindia_4',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(133,182,111,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_cropindia_4');
+        map.getPane('pane_cropindia_4').style.zIndex = 404;
+        map.getPane('pane_cropindia_4').style['mix-blend-mode'] = 'normal';
+        var layer_cropindia_4 = new L.geoJson(json_cropindia_4, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_cropindia_4',
+            layerName: 'layer_cropindia_4',
+            pane: 'pane_cropindia_4',
+            onEachFeature: pop_cropindia_4,
+            style: style_cropindia_4_0,
+        });
+        bounds_group.addLayer(layer_cropindia_4);
+        map.addLayer(layer_cropindia_4);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'<img src="legend/cropindia_4.png" /> crop-india': layer_cropindia_4,'groundwater-final<br /><table><tr><td style="text-align: center;"><img src="legend/groundwaterfinal_3_048780.png" /></td><td>0 - 4878 </td></tr><tr><td style="text-align: center;"><img src="legend/groundwaterfinal_3_4878177981.png" /></td><td>4878 - 17798 </td></tr><tr><td style="text-align: center;"><img src="legend/groundwaterfinal_3_17798357482.png" /></td><td>17798 - 35748 </td></tr><tr><td style="text-align: center;"><img src="legend/groundwaterfinal_3_35748560383.png" /></td><td>35748 - 56038 </td></tr><tr><td style="text-align: center;"><img src="legend/groundwaterfinal_3_560383685024.png" /></td><td>56038 - 368502 </td></tr></table>': layer_groundwaterfinal_3,'rainfall<br /><table><tr><td style="text-align: center;"><img src="legend/rainfall_2_1817660.png" /></td><td>181 - 766 </td></tr><tr><td style="text-align: center;"><img src="legend/rainfall_2_7669801.png" /></td><td>766 - 980 </td></tr><tr><td style="text-align: center;"><img src="legend/rainfall_2_98011692.png" /></td><td>980 - 1169 </td></tr><tr><td style="text-align: center;"><img src="legend/rainfall_2_116916183.png" /></td><td>1169 - 1618 </td></tr><tr><td style="text-align: center;"><img src="legend/rainfall_2_161872294.png" /></td><td>1618 - 7229 </td></tr></table>': layer_rainfall_2,'soil-final<br /><table><tr><td style="text-align: center;"><img src="legend/soilfinal_1_2100.png" /></td><td>2 - 10 </td></tr><tr><td style="text-align: center;"><img src="legend/soilfinal_1_10111.png" /></td><td>10 - 11 </td></tr><tr><td style="text-align: center;"><img src="legend/soilfinal_1_11122.png" /></td><td>11 - 12 </td></tr><tr><td style="text-align: center;"><img src="legend/soilfinal_1_12143.png" /></td><td>12 - 14 </td></tr><tr><td style="text-align: center;"><img src="legend/soilfinal_1_14574.png" /></td><td>14 - 57 </td></tr></table>': layer_soilfinal_1,"OSM Standard": layer_OSMStandard_0,},{collapsed:false}).addTo(map);
+        setBounds();
+        var mapDiv = document.getElementById('map');
+        var row = document.createElement('div');
+        row.className="row";
+        row.id="all";
+        row.style.height = "100%";
+        var col1 = document.createElement('div');
+        col1.className="col9";
+        col1.id = "mapWindow";
+        col1.style.height = "99%";
+        col1.style.width = "80%";
+        col1.style.display = "inline-block";
+        var col2 = document.createElement('div');
+        col2.className="col3";
+        col2.id = "menu";
+        col2.style.display = "inline-block";
+        mapDiv.parentNode.insertBefore(row, mapDiv);
+        document.getElementById("all").appendChild(col1);
+        document.getElementById("all").appendChild(col2);
+        col1.appendChild(mapDiv)
+        var Filters = {"ST_NM": "str","DISTRICT": "str","Season": "str","Crop": "str","Crop_Year": "str"};
+        function filterFunc() {
+          map.eachLayer(function(lyr){
+          if ("options" in lyr && "dataVar" in lyr["options"]){
+            features = this[lyr["options"]["dataVar"]].features.slice(0);
+            try{
+              for (key in Filters){
+                if (Filters[key] == "str" || Filters[key] == "bool"){
+                  var selection = [];
+                  var options = document.getElementById("sel_" + key).options
+                  for (var i=0; i < options.length; i++) {
+                    if (options[i].selected) selection.push(options[i].value);
+                  }
+                    try{
+                      if (key in features[0].properties){
+                        for (i = features.length - 1;
+                          i >= 0; --i){
+                          if (selection.indexOf(
+                          features[i].properties[key])<0
+                          && selection.length>0) {
+                          features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                  }
+                }
+                if (Filters[key] == "int"){
+                  sliderVals =  document.getElementById(
+                    "div_" + key).noUiSlider.get();
+                  try{
+                    if (key in features[0].properties){
+                    for (i = features.length - 1; i >= 0; --i){
+                      if (parseInt(features[i].properties[key])
+                          < sliderVals[0]
+                          || parseInt(features[i].properties[key])
+                          > sliderVals[1]){
+                            features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                    }
+                  }
+                if (Filters[key] == "real"){
+                  sliderVals =  document.getElementById(
+                    "div_" + key).noUiSlider.get();
+                  try{
+                    if (key in features[0].properties){
+                    for (i = features.length - 1; i >= 0; --i){
+                      if (features[i].properties[key]
+                          < sliderVals[0]
+                          || features[i].properties[key]
+                          > sliderVals[1]){
+                            features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                    }
+                  }
+                if (Filters[key] == "date"
+                  || Filters[key] == "datetime"
+                  || Filters[key] == "time"){
+                  try{
+                    if (key in features[0].properties){
+                      HTMLkey = key.replace(/[&\/\\#,+()$~%.'":*?<>{} ]/g, '');
+                      startdate = document.getElementById("dat_" +
+                        HTMLkey + "_date1").value.replace(" ", "T");
+                      enddate = document.getElementById("dat_" +
+                        HTMLkey + "_date2").value.replace(" ", "T");
+                      for (i = features.length - 1; i >= 0; --i){
+                        if (features[i].properties[key] < startdate
+                          || features[i].properties[key] > enddate){
+                          features.splice(i,1);
+                        }
+                      }
+                    }
+                  } catch(err){
+                  }
+                }
+              }
+            } catch(err){
+            }
+          this[lyr["options"]["layerName"]].clearLayers();
+          this[lyr["options"]["layerName"]].addData(features);
+          }
+          })
+        }
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_ST_NM = document.createElement('div');
+            div_ST_NM.id = "div_ST_NM";
+            div_ST_NM.className= "filterselect";
+            document.getElementById("menu").appendChild(div_ST_NM);
+            sel_ST_NM = document.createElement('select');
+            sel_ST_NM.multiple = true;
+            sel_ST_NM.size = 10;
+            sel_ST_NM.id = "sel_ST_NM";
+            var ST_NM_options_str = "<option value='' unselected></option>";
+            sel_ST_NM.onchange = function(){filterFunc()};
+            ST_NM_options_str  += '<option value="Andaman & Nicobar Island">Andaman & Nicobar Island</option>';
+            ST_NM_options_str  += '<option value="Andhra Pradesh">Andhra Pradesh</option>';
+            ST_NM_options_str  += '<option value="Arunanchal Pradesh">Arunanchal Pradesh</option>';
+            ST_NM_options_str  += '<option value="Assam">Assam</option>';
+            ST_NM_options_str  += '<option value="Bihar">Bihar</option>';
+            ST_NM_options_str  += '<option value="Chandigarh">Chandigarh</option>';
+            ST_NM_options_str  += '<option value="Chhattisgarh">Chhattisgarh</option>';
+            ST_NM_options_str  += '<option value="Dadara & Nagar Havelli">Dadara & Nagar Havelli</option>';
+            ST_NM_options_str  += '<option value="Daman & Diu">Daman & Diu</option>';
+            ST_NM_options_str  += '<option value="Delhi  & NCR">Delhi  & NCR</option>';
+            ST_NM_options_str  += '<option value="Goa">Goa</option>';
+            ST_NM_options_str  += '<option value="Gujarat">Gujarat</option>';
+            ST_NM_options_str  += '<option value="Haryana">Haryana</option>';
+            ST_NM_options_str  += '<option value="Himachal Pradesh">Himachal Pradesh</option>';
+            ST_NM_options_str  += '<option value="Jammu and Kashmir">Jammu and Kashmir</option>';
+            ST_NM_options_str  += '<option value="Jharkhand">Jharkhand</option>';
+            ST_NM_options_str  += '<option value="Karnataka">Karnataka</option>';
+            ST_NM_options_str  += '<option value="Kerala">Kerala</option>';
+            ST_NM_options_str  += '<option value="Lakshadweep">Lakshadweep</option>';
+            ST_NM_options_str  += '<option value="Madhya Pradesh">Madhya Pradesh</option>';
+            ST_NM_options_str  += '<option value="Maharashtra">Maharashtra</option>';
+            ST_NM_options_str  += '<option value="Manipur">Manipur</option>';
+            ST_NM_options_str  += '<option value="Meghalaya">Meghalaya</option>';
+            ST_NM_options_str  += '<option value="Mizoram">Mizoram</option>';
+            ST_NM_options_str  += '<option value="Nagaland">Nagaland</option>';
+            ST_NM_options_str  += '<option value="Orissa">Orissa</option>';
+            ST_NM_options_str  += '<option value="Puducherry">Puducherry</option>';
+            ST_NM_options_str  += '<option value="Punjab">Punjab</option>';
+            ST_NM_options_str  += '<option value="Rajasthan">Rajasthan</option>';
+            ST_NM_options_str  += '<option value="Sikkim">Sikkim</option>';
+            ST_NM_options_str  += '<option value="Tamil Nadu">Tamil Nadu</option>';
+            ST_NM_options_str  += '<option value="Tripura">Tripura</option>';
+            ST_NM_options_str  += '<option value="Uttar Pradesh">Uttar Pradesh</option>';
+            ST_NM_options_str  += '<option value="Uttarakhand">Uttarakhand</option>';
+            ST_NM_options_str  += '<option value="West Bengal">West Bengal</option>';
+            sel_ST_NM.innerHTML = ST_NM_options_str;
+            div_ST_NM.appendChild(sel_ST_NM);
+            var lab_ST_NM = document.createElement('div');
+            lab_ST_NM.innerHTML = 'State';
+            lab_ST_NM.className = 'filterlabel';
+            div_ST_NM.appendChild(lab_ST_NM);
+            var reset_ST_NM = document.createElement('div');
+            reset_ST_NM.innerHTML = 'clear filter';
+            reset_ST_NM.className = 'filterlabel';
+            reset_ST_NM.onclick = function() {
+                var options = document.getElementById("sel_ST_NM").options;
+                for (var i=0; i < options.length; i++) {
+                    options[i].selected = false;
+                }
+                filterFunc();
+            };
+            div_ST_NM.appendChild(reset_ST_NM);
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_DISTRICT = document.createElement('div');
+            div_DISTRICT.id = "div_DISTRICT";
+            div_DISTRICT.className= "filterselect";
+            document.getElementById("menu").appendChild(div_DISTRICT);
+            sel_DISTRICT = document.createElement('select');
+            sel_DISTRICT.multiple = true;
+            sel_DISTRICT.size = 10;
+            sel_DISTRICT.id = "sel_DISTRICT";
+            var DISTRICT_options_str = "<option value='' unselected></option>";
+            sel_DISTRICT.onchange = function(){filterFunc()};
+            DISTRICT_options_str  += '<option value="Adilabad">Adilabad</option>';
+            DISTRICT_options_str  += '<option value="Agra">Agra</option>';
+            DISTRICT_options_str  += '<option value="Ahmedabad">Ahmedabad</option>';
+            DISTRICT_options_str  += '<option value="Ahmednagar">Ahmednagar</option>';
+            DISTRICT_options_str  += '<option value="Aizawl">Aizawl</option>';
+            DISTRICT_options_str  += '<option value="Ajmer">Ajmer</option>';
+            DISTRICT_options_str  += '<option value="Akola">Akola</option>';
+            DISTRICT_options_str  += '<option value="Alappuzha">Alappuzha</option>';
+            DISTRICT_options_str  += '<option value="Aligarh">Aligarh</option>';
+            DISTRICT_options_str  += '<option value="Allahabad">Allahabad</option>';
+            DISTRICT_options_str  += '<option value="Almora">Almora</option>';
+            DISTRICT_options_str  += '<option value="Alwar">Alwar</option>';
+            DISTRICT_options_str  += '<option value="Ambala">Ambala</option>';
+            DISTRICT_options_str  += '<option value="Ambedkar Nagar">Ambedkar Nagar</option>';
+            DISTRICT_options_str  += '<option value="Amravati">Amravati</option>';
+            DISTRICT_options_str  += '<option value="Amreli">Amreli</option>';
+            DISTRICT_options_str  += '<option value="Amritsar">Amritsar</option>';
+            DISTRICT_options_str  += '<option value="Anand">Anand</option>';
+            DISTRICT_options_str  += '<option value="Anantapur">Anantapur</option>';
+            DISTRICT_options_str  += '<option value="Anantnag">Anantnag</option>';
+            DISTRICT_options_str  += '<option value="Andamans">Andamans</option>';
+            DISTRICT_options_str  += '<option value="Angul">Angul</option>';
+            DISTRICT_options_str  += '<option value="Araria">Araria</option>';
+            DISTRICT_options_str  += '<option value="Ariyalur">Ariyalur</option>';
+            DISTRICT_options_str  += '<option value="Auraiya">Auraiya</option>';
+            DISTRICT_options_str  += '<option value="Aurangabad">Aurangabad</option>';
+            DISTRICT_options_str  += '<option value="Azamgarh">Azamgarh</option>';
+            DISTRICT_options_str  += '<option value="Badgam">Badgam</option>';
+            DISTRICT_options_str  += '<option value="Bagalkote">Bagalkote</option>';
+            DISTRICT_options_str  += '<option value="Bageshwar">Bageshwar</option>';
+            DISTRICT_options_str  += '<option value="Baghpat">Baghpat</option>';
+            DISTRICT_options_str  += '<option value="Bahraich">Bahraich</option>';
+            DISTRICT_options_str  += '<option value="Balaghat">Balaghat</option>';
+            DISTRICT_options_str  += '<option value="Balangir">Balangir</option>';
+            DISTRICT_options_str  += '<option value="Baleshwar">Baleshwar</option>';
+            DISTRICT_options_str  += '<option value="Ballia">Ballia</option>';
+            DISTRICT_options_str  += '<option value="Balrampur">Balrampur</option>';
+            DISTRICT_options_str  += '<option value="Banas Kantha">Banas Kantha</option>';
+            DISTRICT_options_str  += '<option value="Banda">Banda</option>';
+            DISTRICT_options_str  += '<option value="Bangalore">Bangalore</option>';
+            DISTRICT_options_str  += '<option value="Bangalore Rural">Bangalore Rural</option>';
+            DISTRICT_options_str  += '<option value="Banka">Banka</option>';
+            DISTRICT_options_str  += '<option value="Bankura">Bankura</option>';
+            DISTRICT_options_str  += '<option value="Banswara">Banswara</option>';
+            DISTRICT_options_str  += '<option value="Barabanki">Barabanki</option>';
+            DISTRICT_options_str  += '<option value="Baramula">Baramula</option>';
+            DISTRICT_options_str  += '<option value="Baran">Baran</option>';
+            DISTRICT_options_str  += '<option value="Barddhaman">Barddhaman</option>';
+            DISTRICT_options_str  += '<option value="Bareilly">Bareilly</option>';
+            DISTRICT_options_str  += '<option value="Bargarh">Bargarh</option>';
+            DISTRICT_options_str  += '<option value="Barmer">Barmer</option>';
+            DISTRICT_options_str  += '<option value="Barpeta">Barpeta</option>';
+            DISTRICT_options_str  += '<option value="Barwani">Barwani</option>';
+            DISTRICT_options_str  += '<option value="Bastar">Bastar</option>';
+            DISTRICT_options_str  += '<option value="Basti">Basti</option>';
+            DISTRICT_options_str  += '<option value="Bathinda">Bathinda</option>';
+            DISTRICT_options_str  += '<option value="Baudh">Baudh</option>';
+            DISTRICT_options_str  += '<option value="Begusarai">Begusarai</option>';
+            DISTRICT_options_str  += '<option value="Belgaum">Belgaum</option>';
+            DISTRICT_options_str  += '<option value="Bellary">Bellary</option>';
+            DISTRICT_options_str  += '<option value="Betul">Betul</option>';
+            DISTRICT_options_str  += '<option value="Bhadrak">Bhadrak</option>';
+            DISTRICT_options_str  += '<option value="Bhagalpur">Bhagalpur</option>';
+            DISTRICT_options_str  += '<option value="Bhandara">Bhandara</option>';
+            DISTRICT_options_str  += '<option value="Bharatpur">Bharatpur</option>';
+            DISTRICT_options_str  += '<option value="Bharuch">Bharuch</option>';
+            DISTRICT_options_str  += '<option value="Bhavnagar">Bhavnagar</option>';
+            DISTRICT_options_str  += '<option value="Bhilwara">Bhilwara</option>';
+            DISTRICT_options_str  += '<option value="Bhind">Bhind</option>';
+            DISTRICT_options_str  += '<option value="Bhiwani">Bhiwani</option>';
+            DISTRICT_options_str  += '<option value="Bhojpur">Bhojpur</option>';
+            DISTRICT_options_str  += '<option value="Bhopal">Bhopal</option>';
+            DISTRICT_options_str  += '<option value="Bid">Bid</option>';
+            DISTRICT_options_str  += '<option value="Bidar">Bidar</option>';
+            DISTRICT_options_str  += '<option value="Bijapur">Bijapur</option>';
+            DISTRICT_options_str  += '<option value="Bijnor">Bijnor</option>';
+            DISTRICT_options_str  += '<option value="Bikaner">Bikaner</option>';
+            DISTRICT_options_str  += '<option value="Bilaspur">Bilaspur</option>';
+            DISTRICT_options_str  += '<option value="Birbhum">Birbhum</option>';
+            DISTRICT_options_str  += '<option value="Bishnupur">Bishnupur</option>';
+            DISTRICT_options_str  += '<option value="Bokaro">Bokaro</option>';
+            DISTRICT_options_str  += '<option value="Bongaigaon">Bongaigaon</option>';
+            DISTRICT_options_str  += '<option value="Budaun">Budaun</option>';
+            DISTRICT_options_str  += '<option value="Bulandshahr">Bulandshahr</option>';
+            DISTRICT_options_str  += '<option value="Buldana">Buldana</option>';
+            DISTRICT_options_str  += '<option value="Bundi">Bundi</option>';
+            DISTRICT_options_str  += '<option value="Buxar">Buxar</option>';
+            DISTRICT_options_str  += '<option value="Cachar">Cachar</option>';
+            DISTRICT_options_str  += '<option value="Central">Central</option>';
+            DISTRICT_options_str  += '<option value="Chamarajanagar">Chamarajanagar</option>';
+            DISTRICT_options_str  += '<option value="Chamba">Chamba</option>';
+            DISTRICT_options_str  += '<option value="Chamoli">Chamoli</option>';
+            DISTRICT_options_str  += '<option value="Champawat">Champawat</option>';
+            DISTRICT_options_str  += '<option value="Champhai">Champhai</option>';
+            DISTRICT_options_str  += '<option value="Chandauli">Chandauli</option>';
+            DISTRICT_options_str  += '<option value="Chandel">Chandel</option>';
+            DISTRICT_options_str  += '<option value="Chandigarh">Chandigarh</option>';
+            DISTRICT_options_str  += '<option value="Chandrapur">Chandrapur</option>';
+            DISTRICT_options_str  += '<option value="Changlang">Changlang</option>';
+            DISTRICT_options_str  += '<option value="Chatra">Chatra</option>';
+            DISTRICT_options_str  += '<option value="Chennai">Chennai</option>';
+            DISTRICT_options_str  += '<option value="Chhatarpur">Chhatarpur</option>';
+            DISTRICT_options_str  += '<option value="Chhindwara">Chhindwara</option>';
+            DISTRICT_options_str  += '<option value="Chikmagalur">Chikmagalur</option>';
+            DISTRICT_options_str  += '<option value="Chitradurga">Chitradurga</option>';
+            DISTRICT_options_str  += '<option value="Chitrakoot">Chitrakoot</option>';
+            DISTRICT_options_str  += '<option value="Chittaurgarh">Chittaurgarh</option>';
+            DISTRICT_options_str  += '<option value="Chittoor">Chittoor</option>';
+            DISTRICT_options_str  += '<option value="Churachandpur">Churachandpur</option>';
+            DISTRICT_options_str  += '<option value="Churu">Churu</option>';
+            DISTRICT_options_str  += '<option value="Coimbatore">Coimbatore</option>';
+            DISTRICT_options_str  += '<option value="Cuddalore">Cuddalore</option>';
+            DISTRICT_options_str  += '<option value="Cuddapah">Cuddapah</option>';
+            DISTRICT_options_str  += '<option value="Cuttack">Cuttack</option>';
+            DISTRICT_options_str  += '<option value="Dadra & Nagar Haveli">Dadra & Nagar Haveli</option>';
+            DISTRICT_options_str  += '<option value="Dakshin Dinajpur">Dakshin Dinajpur</option>';
+            DISTRICT_options_str  += '<option value="Dakshina Kannada">Dakshina Kannada</option>';
+            DISTRICT_options_str  += '<option value="Daman">Daman</option>';
+            DISTRICT_options_str  += '<option value="Damoh">Damoh</option>';
+            DISTRICT_options_str  += '<option value="Dantewada">Dantewada</option>';
+            DISTRICT_options_str  += '<option value="Darbhanga">Darbhanga</option>';
+            DISTRICT_options_str  += '<option value="Darjiling">Darjiling</option>';
+            DISTRICT_options_str  += '<option value="Darrang">Darrang</option>';
+            DISTRICT_options_str  += '<option value="Data Not Available">Data Not Available</option>';
+            DISTRICT_options_str  += '<option value="Datia">Datia</option>';
+            DISTRICT_options_str  += '<option value="Dausa">Dausa</option>';
+            DISTRICT_options_str  += '<option value="Davanagere">Davanagere</option>';
+            DISTRICT_options_str  += '<option value="Debagarh">Debagarh</option>';
+            DISTRICT_options_str  += '<option value="Dehradun">Dehradun</option>';
+            DISTRICT_options_str  += '<option value="Deoghar">Deoghar</option>';
+            DISTRICT_options_str  += '<option value="Deoria">Deoria</option>';
+            DISTRICT_options_str  += '<option value="Dewas">Dewas</option>';
+            DISTRICT_options_str  += '<option value="Dhalai">Dhalai</option>';
+            DISTRICT_options_str  += '<option value="Dhamtari">Dhamtari</option>';
+            DISTRICT_options_str  += '<option value="Dhanbad">Dhanbad</option>';
+            DISTRICT_options_str  += '<option value="Dhar">Dhar</option>';
+            DISTRICT_options_str  += '<option value="Dharmapuri">Dharmapuri</option>';
+            DISTRICT_options_str  += '<option value="Dharwad">Dharwad</option>';
+            DISTRICT_options_str  += '<option value="Dhaulpur">Dhaulpur</option>';
+            DISTRICT_options_str  += '<option value="Dhemaji">Dhemaji</option>';
+            DISTRICT_options_str  += '<option value="Dhenkanal">Dhenkanal</option>';
+            DISTRICT_options_str  += '<option value="Dhubri">Dhubri</option>';
+            DISTRICT_options_str  += '<option value="Dhule">Dhule</option>';
+            DISTRICT_options_str  += '<option value="Dibang Valley">Dibang Valley</option>';
+            DISTRICT_options_str  += '<option value="Dibrugarh">Dibrugarh</option>';
+            DISTRICT_options_str  += '<option value="Dimapur">Dimapur</option>';
+            DISTRICT_options_str  += '<option value="Dindigul">Dindigul</option>';
+            DISTRICT_options_str  += '<option value="Dindori">Dindori</option>';
+            DISTRICT_options_str  += '<option value="Diu">Diu</option>';
+            DISTRICT_options_str  += '<option value="Doda">Doda</option>';
+            DISTRICT_options_str  += '<option value="Dohad">Dohad</option>';
+            DISTRICT_options_str  += '<option value="Dumka">Dumka</option>';
+            DISTRICT_options_str  += '<option value="Dungarpur">Dungarpur</option>';
+            DISTRICT_options_str  += '<option value="Durg">Durg</option>';
+            DISTRICT_options_str  += '<option value="East">East</option>';
+            DISTRICT_options_str  += '<option value="East Garo Hills">East Garo Hills</option>';
+            DISTRICT_options_str  += '<option value="East Godavari">East Godavari</option>';
+            DISTRICT_options_str  += '<option value="East Kameng">East Kameng</option>';
+            DISTRICT_options_str  += '<option value="East Khasi Hills">East Khasi Hills</option>';
+            DISTRICT_options_str  += '<option value="East Nimar">East Nimar</option>';
+            DISTRICT_options_str  += '<option value="East Siang">East Siang</option>';
+            DISTRICT_options_str  += '<option value="Ernakulam">Ernakulam</option>';
+            DISTRICT_options_str  += '<option value="Erode">Erode</option>';
+            DISTRICT_options_str  += '<option value="Etah">Etah</option>';
+            DISTRICT_options_str  += '<option value="Etawah">Etawah</option>';
+            DISTRICT_options_str  += '<option value="Faizabad">Faizabad</option>';
+            DISTRICT_options_str  += '<option value="Faridabad">Faridabad</option>';
+            DISTRICT_options_str  += '<option value="Faridkot">Faridkot</option>';
+            DISTRICT_options_str  += '<option value="Farrukhabad">Farrukhabad</option>';
+            DISTRICT_options_str  += '<option value="Fatehabad">Fatehabad</option>';
+            DISTRICT_options_str  += '<option value="Fatehgarh Sahib">Fatehgarh Sahib</option>';
+            DISTRICT_options_str  += '<option value="Fatehpur">Fatehpur</option>';
+            DISTRICT_options_str  += '<option value="Firozabad">Firozabad</option>';
+            DISTRICT_options_str  += '<option value="Firozpur">Firozpur</option>';
+            DISTRICT_options_str  += '<option value="Gadag">Gadag</option>';
+            DISTRICT_options_str  += '<option value="Gadchiroli">Gadchiroli</option>';
+            DISTRICT_options_str  += '<option value="Gajapati">Gajapati</option>';
+            DISTRICT_options_str  += '<option value="Gandhinagar">Gandhinagar</option>';
+            DISTRICT_options_str  += '<option value="Ganganagar">Ganganagar</option>';
+            DISTRICT_options_str  += '<option value="Ganjam">Ganjam</option>';
+            DISTRICT_options_str  += '<option value="Garhwa">Garhwa</option>';
+            DISTRICT_options_str  += '<option value="Garhwal">Garhwal</option>';
+            DISTRICT_options_str  += '<option value="Gautam Buddha Nagar">Gautam Buddha Nagar</option>';
+            DISTRICT_options_str  += '<option value="Gaya">Gaya</option>';
+            DISTRICT_options_str  += '<option value="Ghaziabad">Ghaziabad</option>';
+            DISTRICT_options_str  += '<option value="Ghazipur">Ghazipur</option>';
+            DISTRICT_options_str  += '<option value="Giridih">Giridih</option>';
+            DISTRICT_options_str  += '<option value="Goalpara">Goalpara</option>';
+            DISTRICT_options_str  += '<option value="Godda">Godda</option>';
+            DISTRICT_options_str  += '<option value="Golaghat">Golaghat</option>';
+            DISTRICT_options_str  += '<option value="Gonda">Gonda</option>';
+            DISTRICT_options_str  += '<option value="Gondiya">Gondiya</option>';
+            DISTRICT_options_str  += '<option value="Gopalganj">Gopalganj</option>';
+            DISTRICT_options_str  += '<option value="Gorakhpur">Gorakhpur</option>';
+            DISTRICT_options_str  += '<option value="Gulbarga">Gulbarga</option>';
+            DISTRICT_options_str  += '<option value="Gumla">Gumla</option>';
+            DISTRICT_options_str  += '<option value="Guna">Guna</option>';
+            DISTRICT_options_str  += '<option value="Guntur">Guntur</option>';
+            DISTRICT_options_str  += '<option value="Gurdaspur">Gurdaspur</option>';
+            DISTRICT_options_str  += '<option value="Gurgaon">Gurgaon</option>';
+            DISTRICT_options_str  += '<option value="Gwalior">Gwalior</option>';
+            DISTRICT_options_str  += '<option value="Hailakandi">Hailakandi</option>';
+            DISTRICT_options_str  += '<option value="Hamirpur">Hamirpur</option>';
+            DISTRICT_options_str  += '<option value="Hanumangarh">Hanumangarh</option>';
+            DISTRICT_options_str  += '<option value="Haora">Haora</option>';
+            DISTRICT_options_str  += '<option value="Harda">Harda</option>';
+            DISTRICT_options_str  += '<option value="Hardoi">Hardoi</option>';
+            DISTRICT_options_str  += '<option value="Hardwar">Hardwar</option>';
+            DISTRICT_options_str  += '<option value="Hassan">Hassan</option>';
+            DISTRICT_options_str  += '<option value="Hathras">Hathras</option>';
+            DISTRICT_options_str  += '<option value="Haveri">Haveri</option>';
+            DISTRICT_options_str  += '<option value="Hazaribagh">Hazaribagh</option>';
+            DISTRICT_options_str  += '<option value="Hingoli">Hingoli</option>';
+            DISTRICT_options_str  += '<option value="Hisar">Hisar</option>';
+            DISTRICT_options_str  += '<option value="Hoshangabad">Hoshangabad</option>';
+            DISTRICT_options_str  += '<option value="Hoshiarpur">Hoshiarpur</option>';
+            DISTRICT_options_str  += '<option value="Hugli">Hugli</option>';
+            DISTRICT_options_str  += '<option value="Hyderabad">Hyderabad</option>';
+            DISTRICT_options_str  += '<option value="Idukki">Idukki</option>';
+            DISTRICT_options_str  += '<option value="Imphal East">Imphal East</option>';
+            DISTRICT_options_str  += '<option value="Imphal West">Imphal West</option>';
+            DISTRICT_options_str  += '<option value="Indore">Indore</option>';
+            DISTRICT_options_str  += '<option value="Jabalpur">Jabalpur</option>';
+            DISTRICT_options_str  += '<option value="Jagatsinghapur">Jagatsinghapur</option>';
+            DISTRICT_options_str  += '<option value="Jaintia Hills">Jaintia Hills</option>';
+            DISTRICT_options_str  += '<option value="Jaipur">Jaipur</option>';
+            DISTRICT_options_str  += '<option value="Jaisalmer">Jaisalmer</option>';
+            DISTRICT_options_str  += '<option value="Jajapur">Jajapur</option>';
+            DISTRICT_options_str  += '<option value="Jalandhar">Jalandhar</option>';
+            DISTRICT_options_str  += '<option value="Jalaun">Jalaun</option>';
+            DISTRICT_options_str  += '<option value="Jalgaon">Jalgaon</option>';
+            DISTRICT_options_str  += '<option value="Jalna">Jalna</option>';
+            DISTRICT_options_str  += '<option value="Jalor">Jalor</option>';
+            DISTRICT_options_str  += '<option value="Jalpaiguri">Jalpaiguri</option>';
+            DISTRICT_options_str  += '<option value="Jammu">Jammu</option>';
+            DISTRICT_options_str  += '<option value="Jamnagar">Jamnagar</option>';
+            DISTRICT_options_str  += '<option value="Jamui">Jamui</option>';
+            DISTRICT_options_str  += '<option value="Janjgir - Champa">Janjgir - Champa</option>';
+            DISTRICT_options_str  += '<option value="Jashpur">Jashpur</option>';
+            DISTRICT_options_str  += '<option value="Jaunpur">Jaunpur</option>';
+            DISTRICT_options_str  += '<option value="Jehanabad">Jehanabad</option>';
+            DISTRICT_options_str  += '<option value="Jhabua">Jhabua</option>';
+            DISTRICT_options_str  += '<option value="Jhajjar">Jhajjar</option>';
+            DISTRICT_options_str  += '<option value="Jhalawar">Jhalawar</option>';
+            DISTRICT_options_str  += '<option value="Jhansi">Jhansi</option>';
+            DISTRICT_options_str  += '<option value="Jharsuguda">Jharsuguda</option>';
+            DISTRICT_options_str  += '<option value="Jhunjhunun">Jhunjhunun</option>';
+            DISTRICT_options_str  += '<option value="Jind">Jind</option>';
+            DISTRICT_options_str  += '<option value="Jodhpur">Jodhpur</option>';
+            DISTRICT_options_str  += '<option value="Jorhat">Jorhat</option>';
+            DISTRICT_options_str  += '<option value="Junagadh">Junagadh</option>';
+            DISTRICT_options_str  += '<option value="Jyotiba Phule Nagar">Jyotiba Phule Nagar</option>';
+            DISTRICT_options_str  += '<option value="Kachchh">Kachchh</option>';
+            DISTRICT_options_str  += '<option value="Kaimur (Bhabua)">Kaimur (Bhabua)</option>';
+            DISTRICT_options_str  += '<option value="Kaithal">Kaithal</option>';
+            DISTRICT_options_str  += '<option value="Kalahandi">Kalahandi</option>';
+            DISTRICT_options_str  += '<option value="Kamrup">Kamrup</option>';
+            DISTRICT_options_str  += '<option value="Kancheepuram">Kancheepuram</option>';
+            DISTRICT_options_str  += '<option value="Kandhamal">Kandhamal</option>';
+            DISTRICT_options_str  += '<option value="Kangra">Kangra</option>';
+            DISTRICT_options_str  += '<option value="Kanker">Kanker</option>';
+            DISTRICT_options_str  += '<option value="Kannauj">Kannauj</option>';
+            DISTRICT_options_str  += '<option value="Kanniyakumari">Kanniyakumari</option>';
+            DISTRICT_options_str  += '<option value="Kannur">Kannur</option>';
+            DISTRICT_options_str  += '<option value="Kanpur Dehat">Kanpur Dehat</option>';
+            DISTRICT_options_str  += '<option value="Kanpur Nagar">Kanpur Nagar</option>';
+            DISTRICT_options_str  += '<option value="Kapurthala">Kapurthala</option>';
+            DISTRICT_options_str  += '<option value="Karaikal">Karaikal</option>';
+            DISTRICT_options_str  += '<option value="Karauli">Karauli</option>';
+            DISTRICT_options_str  += '<option value="Karbi Anglong">Karbi Anglong</option>';
+            DISTRICT_options_str  += '<option value="Kargil">Kargil</option>';
+            DISTRICT_options_str  += '<option value="Karimganj">Karimganj</option>';
+            DISTRICT_options_str  += '<option value="Karimnagar">Karimnagar</option>';
+            DISTRICT_options_str  += '<option value="Karnal">Karnal</option>';
+            DISTRICT_options_str  += '<option value="Karur">Karur</option>';
+            DISTRICT_options_str  += '<option value="Kasaragod">Kasaragod</option>';
+            DISTRICT_options_str  += '<option value="Kathua">Kathua</option>';
+            DISTRICT_options_str  += '<option value="Katihar">Katihar</option>';
+            DISTRICT_options_str  += '<option value="Katni">Katni</option>';
+            DISTRICT_options_str  += '<option value="Kaushambi">Kaushambi</option>';
+            DISTRICT_options_str  += '<option value="Kawardha">Kawardha</option>';
+            DISTRICT_options_str  += '<option value="Kendrapara">Kendrapara</option>';
+            DISTRICT_options_str  += '<option value="Kendujhar">Kendujhar</option>';
+            DISTRICT_options_str  += '<option value="Khagaria">Khagaria</option>';
+            DISTRICT_options_str  += '<option value="Khammam">Khammam</option>';
+            DISTRICT_options_str  += '<option value="Kheda">Kheda</option>';
+            DISTRICT_options_str  += '<option value="Kheri">Kheri</option>';
+            DISTRICT_options_str  += '<option value="Khordha">Khordha</option>';
+            DISTRICT_options_str  += '<option value="Kinnaur">Kinnaur</option>';
+            DISTRICT_options_str  += '<option value="Kishanganj">Kishanganj</option>';
+            DISTRICT_options_str  += '<option value="Koch Bihar">Koch Bihar</option>';
+            DISTRICT_options_str  += '<option value="Kodagu">Kodagu</option>';
+            DISTRICT_options_str  += '<option value="Kodarma">Kodarma</option>';
+            DISTRICT_options_str  += '<option value="Kohima">Kohima</option>';
+            DISTRICT_options_str  += '<option value="Kokrajhar">Kokrajhar</option>';
+            DISTRICT_options_str  += '<option value="Kolar">Kolar</option>';
+            DISTRICT_options_str  += '<option value="Kolasib">Kolasib</option>';
+            DISTRICT_options_str  += '<option value="Kolhapur">Kolhapur</option>';
+            DISTRICT_options_str  += '<option value="Kolkata">Kolkata</option>';
+            DISTRICT_options_str  += '<option value="Kollam">Kollam</option>';
+            DISTRICT_options_str  += '<option value="Koppal">Koppal</option>';
+            DISTRICT_options_str  += '<option value="Koraput">Koraput</option>';
+            DISTRICT_options_str  += '<option value="Korba">Korba</option>';
+            DISTRICT_options_str  += '<option value="Koriya">Koriya</option>';
+            DISTRICT_options_str  += '<option value="Kota">Kota</option>';
+            DISTRICT_options_str  += '<option value="Kottayam">Kottayam</option>';
+            DISTRICT_options_str  += '<option value="Kozhikode">Kozhikode</option>';
+            DISTRICT_options_str  += '<option value="Krishna">Krishna</option>';
+            DISTRICT_options_str  += '<option value="Kullu">Kullu</option>';
+            DISTRICT_options_str  += '<option value="Kupwara">Kupwara</option>';
+            DISTRICT_options_str  += '<option value="Kurnool">Kurnool</option>';
+            DISTRICT_options_str  += '<option value="Kurukshetra">Kurukshetra</option>';
+            DISTRICT_options_str  += '<option value="Kushinagar">Kushinagar</option>';
+            DISTRICT_options_str  += '<option value="Lahul & Spiti">Lahul & Spiti</option>';
+            DISTRICT_options_str  += '<option value="Lakhimpur">Lakhimpur</option>';
+            DISTRICT_options_str  += '<option value="Lakhisarai">Lakhisarai</option>';
+            DISTRICT_options_str  += '<option value="Lakshadweep">Lakshadweep</option>';
+            DISTRICT_options_str  += '<option value="Lalitpur">Lalitpur</option>';
+            DISTRICT_options_str  += '<option value="Latur">Latur</option>';
+            DISTRICT_options_str  += '<option value="Lawngtlai">Lawngtlai</option>';
+            DISTRICT_options_str  += '<option value="Leh (Ladakh)">Leh (Ladakh)</option>';
+            DISTRICT_options_str  += '<option value="Lohardaga">Lohardaga</option>';
+            DISTRICT_options_str  += '<option value="Lohit">Lohit</option>';
+            DISTRICT_options_str  += '<option value="Lower Subansiri">Lower Subansiri</option>';
+            DISTRICT_options_str  += '<option value="Lucknow">Lucknow</option>';
+            DISTRICT_options_str  += '<option value="Ludhiana">Ludhiana</option>';
+            DISTRICT_options_str  += '<option value="Lunglei">Lunglei</option>';
+            DISTRICT_options_str  += '<option value="Madhepura">Madhepura</option>';
+            DISTRICT_options_str  += '<option value="Madhubani">Madhubani</option>';
+            DISTRICT_options_str  += '<option value="Madurai">Madurai</option>';
+            DISTRICT_options_str  += '<option value="Mahasamund">Mahasamund</option>';
+            DISTRICT_options_str  += '<option value="Mahbubnagar">Mahbubnagar</option>';
+            DISTRICT_options_str  += '<option value="Mahe">Mahe</option>';
+            DISTRICT_options_str  += '<option value="Mahendragarh">Mahendragarh</option>';
+            DISTRICT_options_str  += '<option value="Mahesana">Mahesana</option>';
+            DISTRICT_options_str  += '<option value="Mahoba">Mahoba</option>';
+            DISTRICT_options_str  += '<option value="Mahrajganj">Mahrajganj</option>';
+            DISTRICT_options_str  += '<option value="Mainpuri">Mainpuri</option>';
+            DISTRICT_options_str  += '<option value="Malappuram">Malappuram</option>';
+            DISTRICT_options_str  += '<option value="Maldah">Maldah</option>';
+            DISTRICT_options_str  += '<option value="Malkangiri">Malkangiri</option>';
+            DISTRICT_options_str  += '<option value="Mamit">Mamit</option>';
+            DISTRICT_options_str  += '<option value="Mandi">Mandi</option>';
+            DISTRICT_options_str  += '<option value="Mandla">Mandla</option>';
+            DISTRICT_options_str  += '<option value="Mandsaur">Mandsaur</option>';
+            DISTRICT_options_str  += '<option value="Mandya">Mandya</option>';
+            DISTRICT_options_str  += '<option value="Mansa">Mansa</option>';
+            DISTRICT_options_str  += '<option value="Marigaon">Marigaon</option>';
+            DISTRICT_options_str  += '<option value="Mathura">Mathura</option>';
+            DISTRICT_options_str  += '<option value="Mau">Mau</option>';
+            DISTRICT_options_str  += '<option value="Mayurbhanj">Mayurbhanj</option>';
+            DISTRICT_options_str  += '<option value="Medak">Medak</option>';
+            DISTRICT_options_str  += '<option value="Medinipur">Medinipur</option>';
+            DISTRICT_options_str  += '<option value="Meerut">Meerut</option>';
+            DISTRICT_options_str  += '<option value="Mirzapur">Mirzapur</option>';
+            DISTRICT_options_str  += '<option value="Moga">Moga</option>';
+            DISTRICT_options_str  += '<option value="Mokokchung">Mokokchung</option>';
+            DISTRICT_options_str  += '<option value="Mon">Mon</option>';
+            DISTRICT_options_str  += '<option value="Moradabad">Moradabad</option>';
+            DISTRICT_options_str  += '<option value="Morena">Morena</option>';
+            DISTRICT_options_str  += '<option value="Muktsar">Muktsar</option>';
+            DISTRICT_options_str  += '<option value="Mumbai">Mumbai</option>';
+            DISTRICT_options_str  += '<option value="Mumbai (Suburban)">Mumbai (Suburban)</option>';
+            DISTRICT_options_str  += '<option value="Munger">Munger</option>';
+            DISTRICT_options_str  += '<option value="Murshidabad">Murshidabad</option>';
+            DISTRICT_options_str  += '<option value="Muzaffarnagar">Muzaffarnagar</option>';
+            DISTRICT_options_str  += '<option value="Muzaffarpur">Muzaffarpur</option>';
+            DISTRICT_options_str  += '<option value="Mysore">Mysore</option>';
+            DISTRICT_options_str  += '<option value="Nabarangapur">Nabarangapur</option>';
+            DISTRICT_options_str  += '<option value="Nadia">Nadia</option>';
+            DISTRICT_options_str  += '<option value="Nagaon">Nagaon</option>';
+            DISTRICT_options_str  += '<option value="Nagapattinam">Nagapattinam</option>';
+            DISTRICT_options_str  += '<option value="Nagaur">Nagaur</option>';
+            DISTRICT_options_str  += '<option value="Nagpur">Nagpur</option>';
+            DISTRICT_options_str  += '<option value="Nainital">Nainital</option>';
+            DISTRICT_options_str  += '<option value="Nalanda">Nalanda</option>';
+            DISTRICT_options_str  += '<option value="Nalbari">Nalbari</option>';
+            DISTRICT_options_str  += '<option value="Nalgonda">Nalgonda</option>';
+            DISTRICT_options_str  += '<option value="Namakkal">Namakkal</option>';
+            DISTRICT_options_str  += '<option value="Nanded">Nanded</option>';
+            DISTRICT_options_str  += '<option value="Nandurbar">Nandurbar</option>';
+            DISTRICT_options_str  += '<option value="Narmada">Narmada</option>';
+            DISTRICT_options_str  += '<option value="Narsimhapur">Narsimhapur</option>';
+            DISTRICT_options_str  += '<option value="Nashik">Nashik</option>';
+            DISTRICT_options_str  += '<option value="Navsari">Navsari</option>';
+            DISTRICT_options_str  += '<option value="Nawada">Nawada</option>';
+            DISTRICT_options_str  += '<option value="Nawanshahr">Nawanshahr</option>';
+            DISTRICT_options_str  += '<option value="Nayagarh">Nayagarh</option>';
+            DISTRICT_options_str  += '<option value="Neemuch">Neemuch</option>';
+            DISTRICT_options_str  += '<option value="Nellore">Nellore</option>';
+            DISTRICT_options_str  += '<option value="New Delhi">New Delhi</option>';
+            DISTRICT_options_str  += '<option value="Nicobars">Nicobars</option>';
+            DISTRICT_options_str  += '<option value="Nizamabad">Nizamabad</option>';
+            DISTRICT_options_str  += '<option value="North">North</option>';
+            DISTRICT_options_str  += '<option value="North Cachar Hills">North Cachar Hills</option>';
+            DISTRICT_options_str  += '<option value="North East">North East</option>';
+            DISTRICT_options_str  += '<option value="North Goa">North Goa</option>';
+            DISTRICT_options_str  += '<option value="North Tripura">North Tripura</option>';
+            DISTRICT_options_str  += '<option value="North Twenty Four Parganas">North Twenty Four Parganas</option>';
+            DISTRICT_options_str  += '<option value="North West">North West</option>';
+            DISTRICT_options_str  += '<option value="Nuapada">Nuapada</option>';
+            DISTRICT_options_str  += '<option value="Osmanabad">Osmanabad</option>';
+            DISTRICT_options_str  += '<option value="Pakaur">Pakaur</option>';
+            DISTRICT_options_str  += '<option value="Palakkad">Palakkad</option>';
+            DISTRICT_options_str  += '<option value="Palamu">Palamu</option>';
+            DISTRICT_options_str  += '<option value="Pali">Pali</option>';
+            DISTRICT_options_str  += '<option value="Panch Mahals">Panch Mahals</option>';
+            DISTRICT_options_str  += '<option value="Panchkula">Panchkula</option>';
+            DISTRICT_options_str  += '<option value="Panipat">Panipat</option>';
+            DISTRICT_options_str  += '<option value="Panna">Panna</option>';
+            DISTRICT_options_str  += '<option value="Papum Pare">Papum Pare</option>';
+            DISTRICT_options_str  += '<option value="Parbhani">Parbhani</option>';
+            DISTRICT_options_str  += '<option value="Pashchim Champaran">Pashchim Champaran</option>';
+            DISTRICT_options_str  += '<option value="Pashchimi Singhbhum">Pashchimi Singhbhum</option>';
+            DISTRICT_options_str  += '<option value="Patan">Patan</option>';
+            DISTRICT_options_str  += '<option value="Pathanamthitta">Pathanamthitta</option>';
+            DISTRICT_options_str  += '<option value="Patiala">Patiala</option>';
+            DISTRICT_options_str  += '<option value="Patna">Patna</option>';
+            DISTRICT_options_str  += '<option value="Perambalur">Perambalur</option>';
+            DISTRICT_options_str  += '<option value="Phek">Phek</option>';
+            DISTRICT_options_str  += '<option value="Pilibhit">Pilibhit</option>';
+            DISTRICT_options_str  += '<option value="Pithoragarh">Pithoragarh</option>';
+            DISTRICT_options_str  += '<option value="Pondicherry">Pondicherry</option>';
+            DISTRICT_options_str  += '<option value="Porbandar">Porbandar</option>';
+            DISTRICT_options_str  += '<option value="Prakasam">Prakasam</option>';
+            DISTRICT_options_str  += '<option value="Pratapgarh">Pratapgarh</option>';
+            DISTRICT_options_str  += '<option value="Pudukkottai">Pudukkottai</option>';
+            DISTRICT_options_str  += '<option value="Pulwama">Pulwama</option>';
+            DISTRICT_options_str  += '<option value="Punch">Punch</option>';
+            DISTRICT_options_str  += '<option value="Pune">Pune</option>';
+            DISTRICT_options_str  += '<option value="Purba Champaran">Purba Champaran</option>';
+            DISTRICT_options_str  += '<option value="Purbi Singhbhum">Purbi Singhbhum</option>';
+            DISTRICT_options_str  += '<option value="Puri">Puri</option>';
+            DISTRICT_options_str  += '<option value="Purnia">Purnia</option>';
+            DISTRICT_options_str  += '<option value="Puruliya">Puruliya</option>';
+            DISTRICT_options_str  += '<option value="Rae Bareli">Rae Bareli</option>';
+            DISTRICT_options_str  += '<option value="Raichur">Raichur</option>';
+            DISTRICT_options_str  += '<option value="Raigarh">Raigarh</option>';
+            DISTRICT_options_str  += '<option value="Raipur">Raipur</option>';
+            DISTRICT_options_str  += '<option value="Raisen">Raisen</option>';
+            DISTRICT_options_str  += '<option value="Rajauri">Rajauri</option>';
+            DISTRICT_options_str  += '<option value="Rajgarh">Rajgarh</option>';
+            DISTRICT_options_str  += '<option value="Rajkot">Rajkot</option>';
+            DISTRICT_options_str  += '<option value="Rajnandgaon">Rajnandgaon</option>';
+            DISTRICT_options_str  += '<option value="Rajsamand">Rajsamand</option>';
+            DISTRICT_options_str  += '<option value="Ramanathapuram">Ramanathapuram</option>';
+            DISTRICT_options_str  += '<option value="Rampur">Rampur</option>';
+            DISTRICT_options_str  += '<option value="Ranchi">Ranchi</option>';
+            DISTRICT_options_str  += '<option value="Rangareddi">Rangareddi</option>';
+            DISTRICT_options_str  += '<option value="Ratlam">Ratlam</option>';
+            DISTRICT_options_str  += '<option value="Ratnagiri">Ratnagiri</option>';
+            DISTRICT_options_str  += '<option value="Rayagada">Rayagada</option>';
+            DISTRICT_options_str  += '<option value="Rewa">Rewa</option>';
+            DISTRICT_options_str  += '<option value="Rewari">Rewari</option>';
+            DISTRICT_options_str  += '<option value="Ri Bhoi">Ri Bhoi</option>';
+            DISTRICT_options_str  += '<option value="Rohtak">Rohtak</option>';
+            DISTRICT_options_str  += '<option value="Rohtas">Rohtas</option>';
+            DISTRICT_options_str  += '<option value="Rudraprayag">Rudraprayag</option>';
+            DISTRICT_options_str  += '<option value="Rupnagar">Rupnagar</option>';
+            DISTRICT_options_str  += '<option value="Sabar Kantha">Sabar Kantha</option>';
+            DISTRICT_options_str  += '<option value="Sagar">Sagar</option>';
+            DISTRICT_options_str  += '<option value="Saharanpur">Saharanpur</option>';
+            DISTRICT_options_str  += '<option value="Saharsa">Saharsa</option>';
+            DISTRICT_options_str  += '<option value="Sahibganj">Sahibganj</option>';
+            DISTRICT_options_str  += '<option value="Saiha">Saiha</option>';
+            DISTRICT_options_str  += '<option value="Salem">Salem</option>';
+            DISTRICT_options_str  += '<option value="Samastipur">Samastipur</option>';
+            DISTRICT_options_str  += '<option value="Sambalpur">Sambalpur</option>';
+            DISTRICT_options_str  += '<option value="Sangli">Sangli</option>';
+            DISTRICT_options_str  += '<option value="Sangrur">Sangrur</option>';
+            DISTRICT_options_str  += '<option value="Sant Kabir Nagar">Sant Kabir Nagar</option>';
+            DISTRICT_options_str  += '<option value="Sant Ravidas Nagar Bhadohi">Sant Ravidas Nagar Bhadohi</option>';
+            DISTRICT_options_str  += '<option value="Saran">Saran</option>';
+            DISTRICT_options_str  += '<option value="Satara">Satara</option>';
+            DISTRICT_options_str  += '<option value="Satna">Satna</option>';
+            DISTRICT_options_str  += '<option value="Sawai Madhopur">Sawai Madhopur</option>';
+            DISTRICT_options_str  += '<option value="Sehore">Sehore</option>';
+            DISTRICT_options_str  += '<option value="Senapati (Excl. 3 sub-divisions)">Senapati (Excl. 3 sub-divisions)</option>';
+            DISTRICT_options_str  += '<option value="Seoni">Seoni</option>';
+            DISTRICT_options_str  += '<option value="Serchhip">Serchhip</option>';
+            DISTRICT_options_str  += '<option value="Shahdol">Shahdol</option>';
+            DISTRICT_options_str  += '<option value="Shahjahanpur">Shahjahanpur</option>';
+            DISTRICT_options_str  += '<option value="Shajapur">Shajapur</option>';
+            DISTRICT_options_str  += '<option value="Sheikhpura">Sheikhpura</option>';
+            DISTRICT_options_str  += '<option value="Sheohar">Sheohar</option>';
+            DISTRICT_options_str  += '<option value="Sheopur">Sheopur</option>';
+            DISTRICT_options_str  += '<option value="Shimla">Shimla</option>';
+            DISTRICT_options_str  += '<option value="Shimoga">Shimoga</option>';
+            DISTRICT_options_str  += '<option value="Shivpuri">Shivpuri</option>';
+            DISTRICT_options_str  += '<option value="Shrawasti">Shrawasti</option>';
+            DISTRICT_options_str  += '<option value="Sibsagar">Sibsagar</option>';
+            DISTRICT_options_str  += '<option value="Siddharthnagar">Siddharthnagar</option>';
+            DISTRICT_options_str  += '<option value="Sidhi">Sidhi</option>';
+            DISTRICT_options_str  += '<option value="Sikar">Sikar</option>';
+            DISTRICT_options_str  += '<option value="Sindhudurg">Sindhudurg</option>';
+            DISTRICT_options_str  += '<option value="Sirmaur">Sirmaur</option>';
+            DISTRICT_options_str  += '<option value="Sirohi">Sirohi</option>';
+            DISTRICT_options_str  += '<option value="Sirsa">Sirsa</option>';
+            DISTRICT_options_str  += '<option value="Sitamarhi">Sitamarhi</option>';
+            DISTRICT_options_str  += '<option value="Sitapur">Sitapur</option>';
+            DISTRICT_options_str  += '<option value="Sivaganga">Sivaganga</option>';
+            DISTRICT_options_str  += '<option value="Siwan">Siwan</option>';
+            DISTRICT_options_str  += '<option value="Solan">Solan</option>';
+            DISTRICT_options_str  += '<option value="Solapur">Solapur</option>';
+            DISTRICT_options_str  += '<option value="Sonapur">Sonapur</option>';
+            DISTRICT_options_str  += '<option value="Sonbhadra">Sonbhadra</option>';
+            DISTRICT_options_str  += '<option value="Sonipat">Sonipat</option>';
+            DISTRICT_options_str  += '<option value="Sonitpur">Sonitpur</option>';
+            DISTRICT_options_str  += '<option value="South">South</option>';
+            DISTRICT_options_str  += '<option value="South  Twenty Four Parganas">South  Twenty Four Parganas</option>';
+            DISTRICT_options_str  += '<option value="South Garo Hills">South Garo Hills</option>';
+            DISTRICT_options_str  += '<option value="South Goa">South Goa</option>';
+            DISTRICT_options_str  += '<option value="South Tripura">South Tripura</option>';
+            DISTRICT_options_str  += '<option value="South West">South West</option>';
+            DISTRICT_options_str  += '<option value="Srikakulam">Srikakulam</option>';
+            DISTRICT_options_str  += '<option value="Srinagar">Srinagar</option>';
+            DISTRICT_options_str  += '<option value="Sultanpur">Sultanpur</option>';
+            DISTRICT_options_str  += '<option value="Sundargarh">Sundargarh</option>';
+            DISTRICT_options_str  += '<option value="Supaul">Supaul</option>';
+            DISTRICT_options_str  += '<option value="Surat">Surat</option>';
+            DISTRICT_options_str  += '<option value="Surendranagar">Surendranagar</option>';
+            DISTRICT_options_str  += '<option value="Surguja">Surguja</option>';
+            DISTRICT_options_str  += '<option value="Tamenglong">Tamenglong</option>';
+            DISTRICT_options_str  += '<option value="Tawang">Tawang</option>';
+            DISTRICT_options_str  += '<option value="Tehri Garhwal">Tehri Garhwal</option>';
+            DISTRICT_options_str  += '<option value="Thane">Thane</option>';
+            DISTRICT_options_str  += '<option value="Thanjavur">Thanjavur</option>';
+            DISTRICT_options_str  += '<option value="The Dangs">The Dangs</option>';
+            DISTRICT_options_str  += '<option value="The Nilgiris">The Nilgiris</option>';
+            DISTRICT_options_str  += '<option value="Theni">Theni</option>';
+            DISTRICT_options_str  += '<option value="Thiruvallur">Thiruvallur</option>';
+            DISTRICT_options_str  += '<option value="Thiruvananthapuram">Thiruvananthapuram</option>';
+            DISTRICT_options_str  += '<option value="Thiruvarur">Thiruvarur</option>';
+            DISTRICT_options_str  += '<option value="Thoothukkudi">Thoothukkudi</option>';
+            DISTRICT_options_str  += '<option value="Thoubal">Thoubal</option>';
+            DISTRICT_options_str  += '<option value="Thrissur">Thrissur</option>';
+            DISTRICT_options_str  += '<option value="Tikamgarh">Tikamgarh</option>';
+            DISTRICT_options_str  += '<option value="Tinsukia">Tinsukia</option>';
+            DISTRICT_options_str  += '<option value="Tirap">Tirap</option>';
+            DISTRICT_options_str  += '<option value="Tiruchirappalli">Tiruchirappalli</option>';
+            DISTRICT_options_str  += '<option value="Tirunelveli">Tirunelveli</option>';
+            DISTRICT_options_str  += '<option value="Tiruvannamalai">Tiruvannamalai</option>';
+            DISTRICT_options_str  += '<option value="Tonk">Tonk</option>';
+            DISTRICT_options_str  += '<option value="Tuensang">Tuensang</option>';
+            DISTRICT_options_str  += '<option value="Tumkur">Tumkur</option>';
+            DISTRICT_options_str  += '<option value="Udaipur">Udaipur</option>';
+            DISTRICT_options_str  += '<option value="Udham Singh Nagar">Udham Singh Nagar</option>';
+            DISTRICT_options_str  += '<option value="Udhampur">Udhampur</option>';
+            DISTRICT_options_str  += '<option value="Udupi">Udupi</option>';
+            DISTRICT_options_str  += '<option value="Ujjain">Ujjain</option>';
+            DISTRICT_options_str  += '<option value="Ukhrul">Ukhrul</option>';
+            DISTRICT_options_str  += '<option value="Umaria">Umaria</option>';
+            DISTRICT_options_str  += '<option value="Una">Una</option>';
+            DISTRICT_options_str  += '<option value="Unnao">Unnao</option>';
+            DISTRICT_options_str  += '<option value="Upper Siang">Upper Siang</option>';
+            DISTRICT_options_str  += '<option value="Upper Subansiri">Upper Subansiri</option>';
+            DISTRICT_options_str  += '<option value="Uttar Dinajpur">Uttar Dinajpur</option>';
+            DISTRICT_options_str  += '<option value="Uttara Kannada">Uttara Kannada</option>';
+            DISTRICT_options_str  += '<option value="Uttarkashi">Uttarkashi</option>';
+            DISTRICT_options_str  += '<option value="Vadodara">Vadodara</option>';
+            DISTRICT_options_str  += '<option value="Vaishali">Vaishali</option>';
+            DISTRICT_options_str  += '<option value="Valsad">Valsad</option>';
+            DISTRICT_options_str  += '<option value="Varanasi">Varanasi</option>';
+            DISTRICT_options_str  += '<option value="Vellore">Vellore</option>';
+            DISTRICT_options_str  += '<option value="Vidisha">Vidisha</option>';
+            DISTRICT_options_str  += '<option value="Viluppuram">Viluppuram</option>';
+            DISTRICT_options_str  += '<option value="Virudhunagar">Virudhunagar</option>';
+            DISTRICT_options_str  += '<option value="Visakhapatnam">Visakhapatnam</option>';
+            DISTRICT_options_str  += '<option value="Vizianagaram">Vizianagaram</option>';
+            DISTRICT_options_str  += '<option value="Warangal">Warangal</option>';
+            DISTRICT_options_str  += '<option value="Wardha">Wardha</option>';
+            DISTRICT_options_str  += '<option value="Washim">Washim</option>';
+            DISTRICT_options_str  += '<option value="Wayanad">Wayanad</option>';
+            DISTRICT_options_str  += '<option value="West">West</option>';
+            DISTRICT_options_str  += '<option value="West Garo Hills">West Garo Hills</option>';
+            DISTRICT_options_str  += '<option value="West Godavari">West Godavari</option>';
+            DISTRICT_options_str  += '<option value="West Kameng">West Kameng</option>';
+            DISTRICT_options_str  += '<option value="West Khasi Hills">West Khasi Hills</option>';
+            DISTRICT_options_str  += '<option value="West Nimar">West Nimar</option>';
+            DISTRICT_options_str  += '<option value="West Siang">West Siang</option>';
+            DISTRICT_options_str  += '<option value="West Tripura">West Tripura</option>';
+            DISTRICT_options_str  += '<option value="Wokha">Wokha</option>';
+            DISTRICT_options_str  += '<option value="Yamunanagar">Yamunanagar</option>';
+            DISTRICT_options_str  += '<option value="Yanam">Yanam</option>';
+            DISTRICT_options_str  += '<option value="Yavatmal">Yavatmal</option>';
+            DISTRICT_options_str  += '<option value="Zunheboto">Zunheboto</option>';
+            sel_DISTRICT.innerHTML = DISTRICT_options_str;
+            div_DISTRICT.appendChild(sel_DISTRICT);
+            var lab_DISTRICT = document.createElement('div');
+            lab_DISTRICT.innerHTML = 'District';
+            lab_DISTRICT.className = 'filterlabel';
+            div_DISTRICT.appendChild(lab_DISTRICT);
+            var reset_DISTRICT = document.createElement('div');
+            reset_DISTRICT.innerHTML = 'clear filter';
+            reset_DISTRICT.className = 'filterlabel';
+            reset_DISTRICT.onclick = function() {
+                var options = document.getElementById("sel_DISTRICT").options;
+                for (var i=0; i < options.length; i++) {
+                    options[i].selected = false;
+                }
+                filterFunc();
+            };
+            div_DISTRICT.appendChild(reset_DISTRICT);
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_Season = document.createElement('div');
+            div_Season.id = "div_Season";
+            div_Season.className= "filterselect";
+            document.getElementById("menu").appendChild(div_Season);
+            sel_Season = document.createElement('select');
+            sel_Season.multiple = true;
+            sel_Season.size = 5;
+            sel_Season.id = "sel_Season";
+            var Season_options_str = "<option value='' unselected></option>";
+            sel_Season.onchange = function(){filterFunc()};
+            Season_options_str  += '<option value="NULL">NULL</option>';
+            Season_options_str  += '<option value="Autumn">Autumn</option>';
+            Season_options_str  += '<option value="Kharif">Kharif</option>';
+            Season_options_str  += '<option value="Rabi">Rabi</option>';
+            Season_options_str  += '<option value="Whole Year">Whole Year</option>';
+            sel_Season.innerHTML = Season_options_str;
+            div_Season.appendChild(sel_Season);
+            var lab_Season = document.createElement('div');
+            lab_Season.innerHTML = 'Season';
+            lab_Season.className = 'filterlabel';
+            div_Season.appendChild(lab_Season);
+            var reset_Season = document.createElement('div');
+            reset_Season.innerHTML = 'clear filter';
+            reset_Season.className = 'filterlabel';
+            reset_Season.onclick = function() {
+                var options = document.getElementById("sel_Season").options;
+                for (var i=0; i < options.length; i++) {
+                    options[i].selected = false;
+                }
+                filterFunc();
+            };
+            div_Season.appendChild(reset_Season);
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_Crop = document.createElement('div');
+            div_Crop.id = "div_Crop";
+            div_Crop.className= "filterselect";
+            document.getElementById("menu").appendChild(div_Crop);
+            sel_Crop = document.createElement('select');
+            sel_Crop.multiple = true;
+            sel_Crop.size = 10;
+            sel_Crop.id = "sel_Crop";
+            var Crop_options_str = "<option value='' unselected></option>";
+            sel_Crop.onchange = function(){filterFunc()};
+            Crop_options_str  += '<option value="NULL">NULL</option>';
+            Crop_options_str  += '<option value="Arecanut">Arecanut</option>';
+            Crop_options_str  += '<option value="Arhar/Tur">Arhar/Tur</option>';
+            Crop_options_str  += '<option value="Bajra">Bajra</option>';
+            Crop_options_str  += '<option value="Banana">Banana</option>';
+            Crop_options_str  += '<option value="Black pepper">Black pepper</option>';
+            Crop_options_str  += '<option value="Coriander">Coriander</option>';
+            Crop_options_str  += '<option value="Cotton(lint)">Cotton(lint)</option>';
+            Crop_options_str  += '<option value="Dry chillies">Dry chillies</option>';
+            Crop_options_str  += '<option value="Dry ginger">Dry ginger</option>';
+            Crop_options_str  += '<option value="Groundnut">Groundnut</option>';
+            Crop_options_str  += '<option value="Horse-gram">Horse-gram</option>';
+            Crop_options_str  += '<option value="Jowar">Jowar</option>';
+            Crop_options_str  += '<option value="Jute">Jute</option>';
+            Crop_options_str  += '<option value="Kapas">Kapas</option>';
+            Crop_options_str  += '<option value="Maize">Maize</option>';
+            Crop_options_str  += '<option value="Moong(Green Gram)">Moong(Green Gram)</option>';
+            Crop_options_str  += '<option value="Onion">Onion</option>';
+            Crop_options_str  += '<option value="Other Kharif pulses">Other Kharif pulses</option>';
+            Crop_options_str  += '<option value="Paddy">Paddy</option>';
+            Crop_options_str  += '<option value="Peas & beans (Pulses)">Peas & beans (Pulses)</option>';
+            Crop_options_str  += '<option value="Ragi">Ragi</option>';
+            Crop_options_str  += '<option value="Rice">Rice</option>';
+            Crop_options_str  += '<option value="Wheat">Wheat</option>';
+            sel_Crop.innerHTML = Crop_options_str;
+            div_Crop.appendChild(sel_Crop);
+            var lab_Crop = document.createElement('div');
+            lab_Crop.innerHTML = 'Crop';
+            lab_Crop.className = 'filterlabel';
+            div_Crop.appendChild(lab_Crop);
+            var reset_Crop = document.createElement('div');
+            reset_Crop.innerHTML = 'clear filter';
+            reset_Crop.className = 'filterlabel';
+            reset_Crop.onclick = function() {
+                var options = document.getElementById("sel_Crop").options;
+                for (var i=0; i < options.length; i++) {
+                    options[i].selected = false;
+                }
+                filterFunc();
+            }; 
+            div_Crop.appendChild(reset_Crop);
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_Crop_Year = document.createElement('div');
+            div_Crop_Year.id = "div_Crop_Year";
+            div_Crop_Year.className= "filterselect";
+            document.getElementById("menu").appendChild(div_Crop_Year);
+            sel_Crop_Year = document.createElement('select');
+            sel_Crop_Year.multiple = true;
+            sel_Crop_Year.size = 10;
+            sel_Crop_Year.id = "sel_Crop_Year";
+            var Crop_Year_options_str = "<option value='' unselected></option>";
+            sel_Crop_Year.onchange = function(){filterFunc()};
+            Crop_Year_options_str  += '<option value="NULL">NULL</option>';
+            Crop_Year_options_str  += '<option value="1997">1997</option>';
+            Crop_Year_options_str  += '<option value="1998">1998</option>';
+            Crop_Year_options_str  += '<option value="1999">1999</option>';
+            Crop_Year_options_str  += '<option value="2000">2000</option>';
+            Crop_Year_options_str  += '<option value="2002">2002</option>';
+            Crop_Year_options_str  += '<option value="2003">2003</option>';
+            Crop_Year_options_str  += '<option value="2004">2004</option>';
+            Crop_Year_options_str  += '<option value="2006">2006</option>';
+            Crop_Year_options_str  += '<option value="2008">2008</option>';
+            Crop_Year_options_str  += '<option value="2011">2011</option>';
+            sel_Crop_Year.innerHTML = Crop_Year_options_str;
+            div_Crop_Year.appendChild(sel_Crop_Year);
+            var lab_Crop_Year = document.createElement('div');
+            lab_Crop_Year.innerHTML = 'Year';
+            lab_Crop_Year.className = 'filterlabel';
+            div_Crop_Year.appendChild(lab_Crop_Year);
+            var reset_Crop_Year = document.createElement('div');
+            reset_Crop_Year.innerHTML = 'clear filter';
+            reset_Crop_Year.className = 'filterlabel';
+            reset_Crop_Year.onclick = function() {
+                var options = document.getElementById("sel_Crop_Year").options;
+                for (var i=0; i < options.length; i++) {
+                    options[i].selected = false;
+                }
+                filterFunc();
+            };
+            div_Crop_Year.appendChild(reset_Crop_Year);
+        </script>
+    </body>
+</html>
