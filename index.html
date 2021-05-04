@@ -21,8 +21,8 @@
         <title>Agriculture Mapping</title>
     </head>
     <body>
-        <div  style="background-image: linear-gradient(#ffff, #FD746C); margin: 0px 0px;">
-          <h2 style="text-align: center; margin-block-start: 0; margin-block-end: 0; padding-top: 10px; padding-bottom: 10px;">Agriculture in India</h2>
+        <div  style="background-color: #85FFBD;background-image: linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%); margin: 0px 0px;">
+          <h2 style="text-align: center; margin-block-start: 0; margin-block-end: 0; padding-top: 10px; padding-bottom: 10px; color: balck;">Agriculture in India</h2>
         </div>
         <div id="map">
         </div>
@@ -43,17 +43,17 @@
         <script src="data/groundwaterfinal_3.js"></script>
         <script src="data/cropindia_4.js"></script>
         <script>
-        var highlightLayer;
+        var highlightLayer={closeButton:false};
         function highlightFeature(e) {
             highlightLayer = e.target;
 
             if (e.target.feature.geometry.type === 'LineString') {
               highlightLayer.setStyle({
-                color: '#ffff00',
+                color: '#ff2600',
               });
             } else {
               highlightLayer.setStyle({
-                fillColor: '#ffff00',
+                fillColor: '#ff2600',
                 fillOpacity: 1
               });
             }
@@ -97,35 +97,35 @@
             });
             var popupContent = '<table>\
                     <tr>\
-                        <th scope="row">sand % topsoil</th>\
+                        <th scope="row">Sand Topsoil (%)-</th>\
                         <td>' + (feature.properties['sand % topsoil'] !== null ? autolinker.link(feature.properties['sand % topsoil'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">silt % topsoil</th>\
+                        <th scope="row">Silt Topsoil (%)-</th>\
                         <td>' + (feature.properties['silt % topsoil'] !== null ? autolinker.link(feature.properties['silt % topsoil'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">clay % topsoil</th>\
+                        <th scope="row">Clay Topsoil (%)-</th>\
                         <td>' + (feature.properties['clay % topsoil'] !== null ? autolinker.link(feature.properties['clay % topsoil'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">pH water topsoil</th>\
+                        <th scope="row">pH water Topsoil-</th>\
                         <td>' + (feature.properties['pH water topsoil'] !== null ? autolinker.link(feature.properties['pH water topsoil'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">OC % topsoil</th>\
+                        <th scope="row">OC Topsoil (%)-l</th>\
                         <td>' + (feature.properties['OC % topsoil'] !== null ? autolinker.link(feature.properties['OC % topsoil'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">N % topsoil</th>\
+                        <th scope="row">N Topsoil (%)-</th>\
                         <td>' + (feature.properties['N % topsoil'] !== null ? autolinker.link(feature.properties['N % topsoil'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">CaCO3 % topsoil</th>\
+                        <th scope="row">CaCO3 Topsoil (%)-</th>\
                         <td>' + (feature.properties['CaCO3 % topsoil'] !== null ? autolinker.link(feature.properties['CaCO3 % topsoil'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">C/N topsoil</th>\
+                        <th scope="row">C/N Topsoil-</th>\
                         <td>' + (feature.properties['C/N topsoil'] !== null ? autolinker.link(feature.properties['C/N topsoil'].toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
@@ -241,15 +241,15 @@
             });
             var popupContent = '<table>\
                     <tr>\
-                        <th scope="row">ST_NM</th>\
+                        <th scope="row">State-</th>\
                         <td>' + (feature.properties['ST_NM'] !== null ? autolinker.link(feature.properties['ST_NM'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">DISTRICT</th>\
+                        <th scope="row">District-</th>\
                         <td>' + (feature.properties['DISTRICT'] !== null ? autolinker.link(feature.properties['DISTRICT'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">ANNUAL</th>\
+                        <th scope="row">Annual-</th>\
                         <td>' + (feature.properties['ANNUAL'] !== null ? autolinker.link(feature.properties['ANNUAL'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
@@ -381,23 +381,23 @@
             });
             var popupContent = '<table>\
                     <tr>\
-                        <th scope="row">ST_NM</th>\
+                        <th scope="row">State-</th>\
                         <td>' + (feature.properties['ST_NM'] !== null ? autolinker.link(feature.properties['ST_NM'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">DISTRICT</th>\
+                        <th scope="row">District-</th>\
                         <td>' + (feature.properties['DISTRICT'] !== null ? autolinker.link(feature.properties['DISTRICT'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">Total Annual Ground Water Recharge</th>\
+                        <th scope="row">Total Annual Ground Water Recharge-</th>\
                         <td>' + (feature.properties['Total Annual Ground Water Recharge'] !== null ? autolinker.link(feature.properties['Total Annual Ground Water Recharge'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">Annual Extractable Ground Water Resource</th>\
+                        <th scope="row">Annual Extractable Ground Water Resource-</th>\
                         <td>' + (feature.properties['Annual Extractable Ground Water Resource'] !== null ? autolinker.link(feature.properties['Annual Extractable Ground Water Resource'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">Current Annual Ground Water Extraction For Irrigation</th>\
+                        <th scope="row">Current Annual Ground Water Extraction For Irrigation-</th>\
                         <td>' + (feature.properties['Current Annual Ground Water Extraction For Irrigation'] !== null ? autolinker.link(feature.properties['Current Annual Ground Water Extraction For Irrigation'].toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
@@ -513,23 +513,23 @@
             });
             var popupContent = '<table>\
                     <tr>\
-                        <th scope="row">ST_NM</th>\
+                        <th scope="row">State-</th>\
                         <td>' + (feature.properties['ST_NM'] !== null ? autolinker.link(feature.properties['ST_NM'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">DISTRICT</th>\
+                        <th scope="row">District</th>\
                         <td>' + (feature.properties['DISTRICT'] !== null ? autolinker.link(feature.properties['DISTRICT'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">Crop_Year</th>\
+                        <th scope="row">Year-</th>\
                         <td>' + (feature.properties['Crop_Year'] !== null ? autolinker.link(feature.properties['Crop_Year'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">Season</th>\
+                        <th scope="row">Season-</th>\
                         <td>' + (feature.properties['Season'] !== null ? autolinker.link(feature.properties['Season'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">Crop</th>\
+                        <th scope="row">Crop-</th>\
                         <td>' + (feature.properties['Crop'] !== null ? autolinker.link(feature.properties['Crop'].toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
@@ -566,23 +566,26 @@
         bounds_group.addLayer(layer_cropindia_4);
         map.addLayer(layer_cropindia_4);
         var baseMaps = {};
-        L.control.layers(baseMaps,{'<img src="legend/cropindia_4.png" /> crop-india': layer_cropindia_4,'groundwater-final<br /><table><tr><td style="text-align: center;"><img src="legend/groundwaterfinal_3_048780.png" /></td><td>0 - 4878 </td></tr><tr><td style="text-align: center;"><img src="legend/groundwaterfinal_3_4878177981.png" /></td><td>4878 - 17798 </td></tr><tr><td style="text-align: center;"><img src="legend/groundwaterfinal_3_17798357482.png" /></td><td>17798 - 35748 </td></tr><tr><td style="text-align: center;"><img src="legend/groundwaterfinal_3_35748560383.png" /></td><td>35748 - 56038 </td></tr><tr><td style="text-align: center;"><img src="legend/groundwaterfinal_3_560383685024.png" /></td><td>56038 - 368502 </td></tr></table>': layer_groundwaterfinal_3,'rainfall<br /><table><tr><td style="text-align: center;"><img src="legend/rainfall_2_1817660.png" /></td><td>181 - 766 </td></tr><tr><td style="text-align: center;"><img src="legend/rainfall_2_7669801.png" /></td><td>766 - 980 </td></tr><tr><td style="text-align: center;"><img src="legend/rainfall_2_98011692.png" /></td><td>980 - 1169 </td></tr><tr><td style="text-align: center;"><img src="legend/rainfall_2_116916183.png" /></td><td>1169 - 1618 </td></tr><tr><td style="text-align: center;"><img src="legend/rainfall_2_161872294.png" /></td><td>1618 - 7229 </td></tr></table>': layer_rainfall_2,'soil-final<br /><table><tr><td style="text-align: center;"><img src="legend/soilfinal_1_2100.png" /></td><td>2 - 10 </td></tr><tr><td style="text-align: center;"><img src="legend/soilfinal_1_10111.png" /></td><td>10 - 11 </td></tr><tr><td style="text-align: center;"><img src="legend/soilfinal_1_11122.png" /></td><td>11 - 12 </td></tr><tr><td style="text-align: center;"><img src="legend/soilfinal_1_12143.png" /></td><td>12 - 14 </td></tr><tr><td style="text-align: center;"><img src="legend/soilfinal_1_14574.png" /></td><td>14 - 57 </td></tr></table>': layer_soilfinal_1,"OSM Standard": layer_OSMStandard_0,},{collapsed:false}).addTo(map);
+        L.control.layers(baseMaps,{'<img src="legend/cropindia_4.png" /> Crops': layer_cropindia_4,'Ground-Water<br /><table><tr><td style="text-align: center;"><img src="legend/groundwaterfinal_3_048780.png" /></td><td>0 - 4878 </td></tr><tr><td style="text-align: center;"><img src="legend/groundwaterfinal_3_4878177981.png" /></td><td>4878 - 17798 </td></tr><tr><td style="text-align: center;"><img src="legend/groundwaterfinal_3_17798357482.png" /></td><td>17798 - 35748 </td></tr><tr><td style="text-align: center;"><img src="legend/groundwaterfinal_3_35748560383.png" /></td><td>35748 - 56038 </td></tr><tr><td style="text-align: center;"><img src="legend/groundwaterfinal_3_560383685024.png" /></td><td>56038 - 368502 </td></tr></table>': layer_groundwaterfinal_3,'Rainfall<br /><table><tr><td style="text-align: center;"><img src="legend/rainfall_2_1817660.png" /></td><td>181 - 766 </td></tr><tr><td style="text-align: center;"><img src="legend/rainfall_2_7669801.png" /></td><td>766 - 980 </td></tr><tr><td style="text-align: center;"><img src="legend/rainfall_2_98011692.png" /></td><td>980 - 1169 </td></tr><tr><td style="text-align: center;"><img src="legend/rainfall_2_116916183.png" /></td><td>1169 - 1618 </td></tr><tr><td style="text-align: center;"><img src="legend/rainfall_2_161872294.png" /></td><td>1618 - 7229 </td></tr></table>': layer_rainfall_2,'Soil<br /><table><tr><td style="text-align: center;"><img src="legend/soilfinal_1_2100.png" /></td><td>2 - 10 </td></tr><tr><td style="text-align: center;"><img src="legend/soilfinal_1_10111.png" /></td><td>10 - 11 </td></tr><tr><td style="text-align: center;"><img src="legend/soilfinal_1_11122.png" /></td><td>11 - 12 </td></tr><tr><td style="text-align: center;"><img src="legend/soilfinal_1_12143.png" /></td><td>12 - 14 </td></tr><tr><td style="text-align: center;"><img src="legend/soilfinal_1_14574.png" /></td><td>14 - 57 </td></tr></table>': layer_soilfinal_1,"OSM Standard": layer_OSMStandard_0,},{collapsed:false}).addTo(map);
         setBounds();
         var mapDiv = document.getElementById('map');
         var row = document.createElement('div');
         row.className="row";
         row.id="all";
-        row.style.height = "100%";
+        row.style.height = "595px";
         var col1 = document.createElement('div');
         col1.className="col9";
         col1.id = "mapWindow";
-        col1.style.height = "99%";
+        col1.style.height = "595px";
         col1.style.width = "80%";
         col1.style.display = "inline-block";
         var col2 = document.createElement('div');
         col2.className="col3";
         col2.id = "menu";
+        col2.style.backgroundImage = "linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%)";
         col2.style.display = "inline-block";
+        col2.style.height="595px";
+        col2.style.overflow="scroll";
         mapDiv.parentNode.insertBefore(row, mapDiv);
         document.getElementById("all").appendChild(col1);
         document.getElementById("all").appendChild(col2);
@@ -686,6 +689,7 @@
             sel_ST_NM.multiple = true;
             sel_ST_NM.size = 10;
             sel_ST_NM.id = "sel_ST_NM";
+            sel_ST_NM.style.backgroundImage="linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)";
             var ST_NM_options_str = "<option value='' unselected></option>";
             sel_ST_NM.onchange = function(){filterFunc()};
             ST_NM_options_str  += '<option value="Andaman & Nicobar Island">Andaman & Nicobar Island</option>';
@@ -730,7 +734,7 @@
             lab_ST_NM.className = 'filterlabel';
             div_ST_NM.appendChild(lab_ST_NM);
             var reset_ST_NM = document.createElement('div');
-            reset_ST_NM.innerHTML = 'clear filter';
+            reset_ST_NM.innerHTML = 'Clear filter';
             reset_ST_NM.className = 'filterlabel';
             reset_ST_NM.onclick = function() {
                 var options = document.getElementById("sel_ST_NM").options;
@@ -750,6 +754,7 @@
             sel_DISTRICT.multiple = true;
             sel_DISTRICT.size = 10;
             sel_DISTRICT.id = "sel_DISTRICT";
+            sel_DISTRICT.style.backgroundImage="linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)";
             var DISTRICT_options_str = "<option value='' unselected></option>";
             sel_DISTRICT.onchange = function(){filterFunc()};
             DISTRICT_options_str  += '<option value="Adilabad">Adilabad</option>';
@@ -1345,7 +1350,7 @@
             lab_DISTRICT.className = 'filterlabel';
             div_DISTRICT.appendChild(lab_DISTRICT);
             var reset_DISTRICT = document.createElement('div');
-            reset_DISTRICT.innerHTML = 'clear filter';
+            reset_DISTRICT.innerHTML = 'Clear filter';
             reset_DISTRICT.className = 'filterlabel';
             reset_DISTRICT.onclick = function() {
                 var options = document.getElementById("sel_DISTRICT").options;
@@ -1365,6 +1370,7 @@
             sel_Season.multiple = true;
             sel_Season.size = 5;
             sel_Season.id = "sel_Season";
+            sel_Season.style.backgroundImage="linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)";
             var Season_options_str = "<option value='' unselected></option>";
             sel_Season.onchange = function(){filterFunc()};
             Season_options_str  += '<option value="NULL">NULL</option>';
@@ -1379,7 +1385,7 @@
             lab_Season.className = 'filterlabel';
             div_Season.appendChild(lab_Season);
             var reset_Season = document.createElement('div');
-            reset_Season.innerHTML = 'clear filter';
+            reset_Season.innerHTML = 'Clear filter';
             reset_Season.className = 'filterlabel';
             reset_Season.onclick = function() {
                 var options = document.getElementById("sel_Season").options;
@@ -1398,6 +1404,7 @@
             sel_Crop = document.createElement('select');
             sel_Crop.multiple = true;
             sel_Crop.size = 10;
+            sel_Crop.style.backgroundImage="linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)";
             sel_Crop.id = "sel_Crop";
             var Crop_options_str = "<option value='' unselected></option>";
             sel_Crop.onchange = function(){filterFunc()};
@@ -1432,7 +1439,7 @@
             lab_Crop.className = 'filterlabel';
             div_Crop.appendChild(lab_Crop);
             var reset_Crop = document.createElement('div');
-            reset_Crop.innerHTML = 'clear filter';
+            reset_Crop.innerHTML = 'Clear filter';
             reset_Crop.className = 'filterlabel';
             reset_Crop.onclick = function() {
                 var options = document.getElementById("sel_Crop").options;
@@ -1451,6 +1458,7 @@
             sel_Crop_Year = document.createElement('select');
             sel_Crop_Year.multiple = true;
             sel_Crop_Year.size = 10;
+            sel_Crop_Year.style.backgroundImage="linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)";
             sel_Crop_Year.id = "sel_Crop_Year";
             var Crop_Year_options_str = "<option value='' unselected></option>";
             sel_Crop_Year.onchange = function(){filterFunc()};
@@ -1472,7 +1480,7 @@
             lab_Crop_Year.className = 'filterlabel';
             div_Crop_Year.appendChild(lab_Crop_Year);
             var reset_Crop_Year = document.createElement('div');
-            reset_Crop_Year.innerHTML = 'clear filter';
+            reset_Crop_Year.innerHTML = 'Clear filter';
             reset_Crop_Year.className = 'filterlabel';
             reset_Crop_Year.onclick = function() {
                 var options = document.getElementById("sel_Crop_Year").options;

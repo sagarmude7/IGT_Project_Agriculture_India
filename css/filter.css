@@ -22,6 +22,9 @@
   margin-left: 10px;
   margin-right: 0px;
   margin-bottom: 10px;
+  color: black;
+  border-style: solid;
+  border: 2px black;
 }
 .filterselect input,
 .filterselect select {
@@ -33,21 +36,25 @@
   margin-top: 0px !important;
   margin-left: 10px;
   margin-right: 10px;
-  margin-bottom: 0px;
+  margin-bottom: 10px;
+  border: bottom 2px black;
 }
 .filterlabel {
-  font: 12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font: 16px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
   /*width: 50%;
     float: right;*/
   margin-right: 10px;
   padding: 0px;
   border: 0px;
+  font-weight: bold;
   /*clear: left;*/
 }
 .filterlabel + .filterlabel {
+  font: 12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
   clear: none;
   text-align: right;
-  color: #999;
+  color: black;
+  font-weight: normal;
 }
 .slider {
   font: 12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;

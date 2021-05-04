@@ -346,6 +346,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .leaflet-control-zoom-out {
   font: bold 18px "Lucida Console", Monaco, monospace;
   text-indent: 1px;
+  color: white;
+  background-image: radial-gradient(
+    circle farthest-corner at 10% 20%,
+    rgba(255, 229, 168, 1) 0%,
+    rgba(251, 174, 222, 1) 100.7%
+  );
 }
 
 .leaflet-touch .leaflet-control-zoom-in,
@@ -357,7 +363,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
 .leaflet-control-layers {
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
-  background: #fff;
+  background: black;
   border-radius: 5px;
 }
 .leaflet-control-layers-toggle {
@@ -384,7 +390,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .leaflet-control-layers-expanded {
   padding: 6px 10px 6px 6px;
   color: #333;
-  background: #fff;
+  background-image: linear-gradient(
+    359.8deg,
+    rgba(252, 255, 222, 1) 2.2%,
+    rgba(182, 241, 171, 1) 99.3%
+  );
 }
 .leaflet-control-layers-scrollbar {
   overflow-y: scroll;
