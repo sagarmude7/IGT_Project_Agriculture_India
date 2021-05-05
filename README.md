@@ -8,8 +8,17 @@
   * [MapBox](#mapbox)
   * [Leaflet](#leaflet)
   * [Github Pages](#github-pages)
+* [Contributors](#cotributors)
 
 ## About The Project 
+India is primarily an agricultural country. Agriculture is the mainstay of the Indian Economy. It accounts for 26% of the GDP. It ensures food security for the country and produces several raw materials for industries. Agricultural development is therefore, a precondition of our national prosperity.
+
+Data availability in India has always been a troublesome work. Data archives in India is not upto the mark. Same is the case for agricultural data.
+Past/historic data of agriculture is a must to study agricultural practices in India to plan agricultural activities to boon production.
+Also, the agricultural data needs to be organized and structured such that even a common man can use it at its ease.
+Agricultural activists/researchers can use this data to study/analyse a particular area of interest.
+
+As a solution to this problem we provide a graphical interface of the data and its distribution across the India 
 
 ## Technologies Used
 
@@ -29,3 +38,9 @@ It is used in unison with mapbox tools to create the webmap.
 
 ### Github Pages
 GitHub Pages is a static site hosting service that takes HTML, CSS, and JavaScript files straight from a repository on GitHub, optionally runs the files through a build process, and publishes a website.
+
+## Contributors
+* [Aditya Darekar]()
+* [Aman Chhaparia](amanchhaparia)
+* [Gautam Agrawal](gautam-dev-maker)
+* [Sagar Mude](sagarmude7)
