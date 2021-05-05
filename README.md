@@ -8,7 +8,8 @@
   * [MapBox](#mapbox)
   * [Leaflet](#leaflet)
   * [Github Pages](#github-pages)
-* [Contributors](#cotributors)
+* [Data Acquisition Method](#data-acquisition-method)
+* [Contributors](#contributors)
 
 ## About The Project 
 India is primarily an agricultural country. Agriculture is the mainstay of the Indian Economy. It accounts for 26% of the GDP. It ensures food security for the country and produces several raw materials for industries. Agricultural development is therefore, a precondition of our national prosperity.
@@ -38,6 +39,16 @@ It is used in unison with mapbox tools to create the webmap.
 
 ### Github Pages
 GitHub Pages is a static site hosting service that takes HTML, CSS, and JavaScript files straight from a repository on GitHub, optionally runs the files through a build process, and publishes a website.
+
+## Data Acquisition Method
+
+* Soil data is acquired by Field Survey Data Acquisition technique by FAO(Food and Agriculture Organization) which acquired through testing of different soils found in different regions and then piling it up to a vector file.
+
+* Rainfall Data is acquired through Field Survey Data Acquisition technique using equipments which meaasures the rainfall.
+
+* Groundwater Data is acquired through Field Survey Data Acquisition technique using hydrogeology equipments.
+
+* Crop Data is acquired through Field Survey Data Acquisition technique by surveying and piling the database.
 
 ## Contributors
 * [Aditya Darekar]()
