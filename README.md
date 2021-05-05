@@ -1,18 +1,31 @@
 # IGT-project
 
-You can visit the project webpage through this link
-https://sanketdofe.github.io/geospatial_agriculture/
+## Table of Contents
 
-This project was undertaken by me as an academic project work in the field of 'Geographic Information Technologies'. This project is a webmap showing the various aspects of the Agriculture in India mapped on a dynamic map.
+* [About The Project](#about-the-project)
+* [Technologies Used](#technologies-used)
+  * [QGIS](#qgis)
+  * [MapBox](#mapbox)
+  * [Leaflet](#leaflet)
+  * [Github Pages](#github-pages)
 
-India is primarily an agricultural country. Agriculture is the mainstay of India's economy. It accounts for 26% of the gross domestic product. It ensures food security for the country and produces several raw materials for industries. Agricultural development is therefore, a precondition of our national prosperity.
+## About The Project 
 
-Data availability in India has always been a troublesome work. Data archives in India is not upto the mark. Same is the case for agricultural data. Past/historic data of agriculture is a must to study agricultural practices in India to plan agricultural activities to boon production.
+## Technologies Used
 
-Also, the agricultural data needs to be organized and structured such that even a common man can use it at its ease. Agricultural activists/researchers can use this data to study/analyse a particular area of interest.
+### QGIS
 
-To address the above issues, I decided to undertake this project. The various layers and all the processing and creation of the maps was done on 'QGIS' which is a open-source cross-platform desktop geographic information system application that supports viewing, editing, and analysis of geospatial data. Then a webmap was created using the layers exported from Qgis. 'LeafletJS' was used to build this interactive webmap along with some Html, Css and Javascript. As the data used for generating these mappings was limited, the webmap is built on a static website.
+QGIS is an open source geographic information system (GIS) software, allowing users to analyze and edit spatial information, in addition to composing and exporting graphical maps. QGIS supports both raster and vector layers; vector data is stored as either point, line, or polygon features. Multiple formats of raster images are supported, and the software can georeference images.
 
-The complete source code can be found at: https://sanketdofe.github.io/geospatial_agriculture/
+It is used in the project to perform mostly all the tasks. Tasks like creating the map, processing the data to get the required filtered data, converting the datatype as per the requirement, joining the data with the shapefiles, adding the different layers, exporting the layers, adding the OSM standard as the basemap and so on.
 
-Any suggestions on improving this webmap would be highly appreciated!!
+### MapBox
+It is an open source mapping platform for custom designed maps. It has a lot of already designed templates of webmaps which can be easily added to the project.
+It is used to create the webmap for our project using leaflet.
+
+### Leaflet
+Leaflet is an open-source JavaScript library used for web mapping. The Leaflet library forms the basis of Mapbox.
+It is used in unison with mapbox tools to create the webmap.
+
+### Github Pages
+GitHub Pages is a static site hosting service that takes HTML, CSS, and JavaScript files straight from a repository on GitHub, optionally runs the files through a build process, and publishes a website.
