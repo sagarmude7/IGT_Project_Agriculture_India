@@ -51,7 +51,7 @@ GitHub Pages is a static site hosting service that takes HTML, CSS, and JavaScri
 * Crop Data is acquired through Field Survey Data Acquisition technique by surveying and piling the database.
 
 ## Contributors
-* [Aditya Darekar]()
-* [Aman Chhaparia](amanchhaparia)
-* [Gautam Agrawal](gautam-dev-maker)
-* [Sagar Mude](sagarmude7)
+* [Aditya Darekar](https://github.com/Adi1505-macintosh)
+* [Aman Chhaparia](https://github.com/amanchhaparia)
+* [Gautam Agrawal](https://github.com/gautam-dev-maker)
+* [Sagar Mude](https://github.com/sagarmude7)
